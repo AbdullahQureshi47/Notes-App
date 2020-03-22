@@ -1,10 +1,17 @@
 import React from "react";
 import { styled } from "styletron-react";
+import {
+  CloseButton,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Button,
+} from "@chakra-ui/core";
 import theme from "../../theme";
-import Input from "../components/Input";
+import Note from "./Note";
 
 const Category = styled("div", ({ $isFocused }) => ({
-  height: "20rem",
+  minHeight: "20rem",
   width: "21%",
   backgroundColor: "white",
   marginBottom: "2rem",
@@ -15,7 +22,7 @@ const Category = styled("div", ({ $isFocused }) => ({
   transformOrigin: "top",
   zIndex: $isFocused ? 1 : 0,
   marginLeft: "3rem",
-  transition: "0.4s transform",
+  transition: "0.2s transform",
 }));
 
 const CategoryHeader = styled("div", () => ({
@@ -34,12 +41,57 @@ const CategoryHeader = styled("div", () => ({
   },
 }));
 
-export default ({ isFocused, details, onClick }) => {
-  const { heading = "" } = details;
+const NoteCardContainer = styled("div", () => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  marginTop: "2rem",
+  width: "100%",
+}));
+
+export default ({
+  isFocused,
+  details,
+  onSelect,
+  onClose,
+  // onAddNote = () => {},
+}) => {
+  const [isNewNoteFormOpen, setIsNewNoteFormOpen] = React.useState(false);
+  const { heading = "", notes = [] } = details;
   return (
-    <Category $isFocused={isFocused} onClick={onClick}>
-      <CategoryHeader>{heading}</CategoryHeader>
-      <Input placeholder="Add a note" />
+    <Category $isFocused={isFocused} onClick={onSelect}>
+      {isFocused && (
+        <CloseButton
+          position="absolute"
+          top="0.3rem"
+          right="0.3rem"
+          onClick={onClose}
+        />
+      )}
+      <CategoryHeader>
+        <Editable isDisabled={!isFocused} value={heading}>
+          <EditableInput />
+          <EditablePreview />
+        </Editable>
+      </CategoryHeader>
+
+      <NoteCardContainer>
+        {notes.map((note) => (
+          <Note details={note} />
+        ))}
+      </NoteCardContainer>
+      {isNewNoteFormOpen && <Note details={{}} />}
+      <Button
+        leftIcon="add"
+        backgroundColor={theme.primaryColor}
+        color="white"
+        marginTop="1rem"
+        width="100%"
+        onClick={() => setIsNewNoteFormOpen(true)}
+      >
+        Add a note
+      </Button>
     </Category>
   );
 };
