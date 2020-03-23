@@ -2,12 +2,12 @@ import React from "react";
 import { styled } from "styletron-react";
 import { set } from "dot-prop-immutable";
 import Category from "./Category";
-import theme from "../../theme";
 
 const NotesContainer = styled("div", () => ({
   width: "100vw",
   minHeight: "100vh",
-  backgroundColor: "#F4F5F7",
+  backgroundImage: "url('./assets/notes-bg.jpg')",
+  position: "relative",
 }));
 
 const CategoryContainer = styled("div", () => ({
@@ -18,14 +18,25 @@ const CategoryContainer = styled("div", () => ({
   padding: "2rem",
 }));
 
+const Overlay = styled("div", {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0,0,0,0.8)",
+});
+
 const Heading = styled("div", () => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  color: theme.primaryColor,
+  color: "white",
   fontSize: "5rem",
   height: "10rem",
+  fontWeight: "bold",
   textTransform: "uppercase",
+  position: "relative",
 }));
 
 const categories = [
@@ -156,6 +167,7 @@ export default () => {
   };
   return (
     <NotesContainer>
+      <Overlay />
       <Heading>Start Keeping your notes</Heading>
       <CategoryContainer>
         {categories.map((category, index) => (
