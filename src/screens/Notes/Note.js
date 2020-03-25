@@ -8,9 +8,9 @@ import {
   IconButton,
   Tooltip,
 } from "@chakra-ui/core";
+import { formatDistanceToNow } from "date-fns";
 import Datepicker from "react-datepicker";
 import theme from "../../theme";
-import Input from "../components/Input";
 
 const NoteCard = styled("div", ({ $focused }) => ({
   position: "relative",
@@ -53,10 +53,16 @@ const ButtonWithTooltip = ({ label = "", ...props }) => (
   </Tooltip>
 );
 
-export default ({ details = {} }) => {
-  const { content = "" } = details;
+export default ({ details = {}, isCategoryFocused, onUpdate, onDelete }) => {
+  const { content = "", id, completionDate } = details;
   const [isFocused, setIsFocused] = React.useState(false);
-  const [isDateInputOpen, setIsDateInputOpen] = React.useState(false);
+  const handleAdd = (key, value) => {
+    onUpdate({
+      ...details,
+      [key]: value,
+    });
+  };
+
   return (
     <NoteCard $focused={isFocused}>
       {isFocused && (
@@ -71,25 +77,41 @@ export default ({ details = {} }) => {
       <Note>
         <div>&bull; &nbsp;&nbsp;</div>
         <Editable
-          value={content}
+          key={Math.random()}
+          onSubmit={(value) => value && handleAdd("content", value)}
+          placeholder="Click to add a note"
+          width="100%"
+          defaultValue={content}
+          isPreviewFocusable={isCategoryFocused}
           onFocus={() => {
             setIsFocused(true);
           }}
         >
-          <EditableInput />
+          <EditableInput name="content" />
           <EditablePreview />
         </Editable>
       </Note>
       <Footer $show={isFocused}>
         <FooterContainer>
-          <TimeContainer>Time Left - 2 hours</TimeContainer>
+          <TimeContainer>
+            Completion time -{" "}
+            {completionDate
+              ? formatDistanceToNow(new Date(completionDate))
+              : ""}
+          </TimeContainer>
           <Actions>
             <ButtonWithTooltip
               label="Delete"
+              disabled={!id}
               size="sm"
               variant="outline"
               isRound={true}
               icon="delete"
+              onClick={() => {
+                if (confirm("Are you sure you want to delete?")) {
+                  onDelete();
+                }
+              }}
             />
             <ButtonWithTooltip
               label="Mark as Complete"
@@ -99,27 +121,27 @@ export default ({ details = {} }) => {
               marginLeft="1rem"
               icon="check"
             />
-
-            <ButtonWithTooltip
-              label="Update Completion Date"
-              size="sm"
-              variant="outline"
-              isRound={true}
-              marginLeft="1rem"
-              icon="calendar"
-              onClick={() => setIsDateInputOpen(!isDateInputOpen)}
+            <Datepicker
+              minDate={Date.now()}
+              selected={completionDate ? new Date(completionDate) : new Date()}
+              timeInputLabel="Time:"
+              dateFormat="MM/dd/yyyy h:mm aa"
+              onChange={(date) => handleAdd("completionDate", date)}
+              showPopperArrow={false}
+              showTimeInput
+              customInput={
+                <ButtonWithTooltip
+                  label="Update Completion Date"
+                  size="sm"
+                  variant="outline"
+                  isRound={true}
+                  marginLeft="1rem"
+                  icon="calendar"
+                />
+              }
             />
           </Actions>
         </FooterContainer>
-        {isDateInputOpen && (
-          <Input
-            placeholderText="Please input completion date and time"
-            $style={{
-              marginTop: "0.4rem",
-            }}
-            $as={Datepicker}
-          />
-        )}
       </Footer>
     </NoteCard>
   );

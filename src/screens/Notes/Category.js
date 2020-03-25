@@ -1,11 +1,11 @@
 import React from "react";
 import { styled } from "styletron-react";
+import { v4 as uuidv4 } from "uuid";
 import {
   CloseButton,
   Editable,
   EditableInput,
   EditablePreview,
-  Button,
   IconButton,
   PopoverContent,
   Popover,
@@ -16,9 +16,10 @@ import {
 import { cardThemes } from "../../theme";
 import ThemePicker from "./ThemePicker";
 import Note from "./Note";
+import { useCategory } from "../../contexts/useCategory";
 
 const Category = styled("div", ({ $isFocused, $theme = "default" }) => ({
-  minHeight: "20rem",
+  minHeight: "10rem",
   width: "21%",
   backgroundColor: cardThemes[$theme].backgroundColor,
   color: cardThemes[$theme].fontColor + "!important",
@@ -58,15 +59,86 @@ const NoteCardContainer = styled("div", () => ({
   width: "100%",
 }));
 
-export default ({
-  isFocused,
-  details,
-  onSelect,
-  onClose,
-  // onAddNote = () => {},
-}) => {
-  const [isNewNoteFormOpen, setIsNewNoteFormOpen] = React.useState(false);
-  const { heading = "", theme = "blue", notes = [] } = details;
+export default ({ isFocused, details, onSelect, onClose }) => {
+  const { heading = "", theme = "blue", notes = [], id } = details;
+  const { setCategories } = useCategory();
+  const handleChange = (e) => {
+    e.persist();
+    setCategories((categories) =>
+      categories.map((category) => {
+        if (id === category.id) {
+          return {
+            ...category,
+            heading: e.target.value,
+          };
+        }
+        return category;
+      })
+    );
+  };
+
+  const updateTheme = (color) =>
+    setCategories((categories) =>
+      categories.map((category) => {
+        if (category.id !== id) {
+          return category;
+        }
+        return {
+          ...category,
+          theme: color,
+        };
+      })
+    );
+  const handleUpdateNote = (noteId) => (details = {}) => {
+    if (!noteId) {
+      setCategories((categories) =>
+        categories.map((category = {}) => {
+          if (id === category.id) {
+            return {
+              ...category,
+              notes: [...(category.notes || []), { ...details, id: uuidv4() }],
+            };
+          }
+          return category;
+        })
+      );
+    } else {
+      setCategories((categories) =>
+        categories.map((category = {}) => {
+          if (id === category.id) {
+            return {
+              ...category,
+              notes: notes.map((note) => {
+                if (note.id === noteId) {
+                  return {
+                    ...note,
+                    ...details,
+                  };
+                }
+                return note;
+              }),
+            };
+          }
+          return category;
+        })
+      );
+    }
+  };
+
+  const handleDeleteNote = (noteId) => () => {
+    setCategories((categories) =>
+      categories.map((category = {}) => {
+        if (id === category.id) {
+          return {
+            ...category,
+            notes: notes.filter((note) => note.id !== noteId),
+          };
+        }
+        return category;
+      })
+    );
+  };
+
   return (
     <Category $isFocused={isFocused} onClick={onSelect} $theme={theme}>
       {isFocused && (
@@ -78,28 +150,28 @@ export default ({
         />
       )}
       <CategoryHeader $theme={theme}>
-        <Editable isDisabled={!isFocused} value={heading}>
-          <EditableInput />
+        <Editable
+          isPreviewFocusable={isFocused}
+          value={heading}
+          selectAllOnFocus={false}
+        >
+          <EditableInput value={heading} onChange={handleChange} />
           <EditablePreview />
         </Editable>
       </CategoryHeader>
 
       <NoteCardContainer>
         {notes.map((note) => (
-          <Note details={note} isCategoryFocused={isFocused} />
+          <Note
+            key={note.id}
+            details={note}
+            isCategoryFocused={isFocused}
+            onUpdate={handleUpdateNote(note.id)}
+            onDelete={handleDeleteNote(note.id)}
+          />
         ))}
       </NoteCardContainer>
-      {isNewNoteFormOpen && <Note details={{}} />}
-      <Button
-        leftIcon="add"
-        backgroundColor={cardThemes[theme].primaryColor}
-        color="white"
-        marginTop="1rem"
-        width="100%"
-        onClick={() => setIsNewNoteFormOpen(true)}
-      >
-        Add a note
-      </Button>
+      <Note onUpdate={handleUpdateNote()} details={{}} mode="ADD" />
       <Popover placement="top">
         <PopoverTrigger>
           <IconButton
@@ -108,14 +180,14 @@ export default ({
             float="right"
             size="sm"
             aria-label="Search database"
-            icon="search"
+            icon="color"
             bg={cardThemes[theme].primaryColor}
           />
         </PopoverTrigger>
         <PopoverContent width="10rem">
           <PopoverHeader color="black">Pick A theme</PopoverHeader>
           <PopoverBody>
-            <ThemePicker />
+            <ThemePicker onThemeSelect={updateTheme} />
           </PopoverBody>
         </PopoverContent>
       </Popover>

@@ -1,6 +1,5 @@
 import React from "react";
 import { styled } from "styletron-react";
-import { set } from "dot-prop-immutable";
 import Category from "./Category";
 import { useCategory } from "../../contexts/useCategory";
 
@@ -51,26 +50,18 @@ export default () => {
     setSelectedCategory("");
   };
 
-  const addNote = (index) => (details) => {
-    const updated = set(categories, `${index}.notes`, (notes) => [
-      ...notes,
-      details,
-    ]);
-    console.log({ updated });
-  };
   return (
     <NotesContainer>
       <Overlay />
       <Heading>Start Keeping your notes</Heading>
       <CategoryContainer>
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <Category
             key={category.id}
             isFocused={selectedCategory === category.id}
             onSelect={handleSelectCategory(category.id)}
             onClose={closeSelectedCategory}
             details={category}
-            onAddNote={addNote(index)}
           />
         ))}
       </CategoryContainer>
