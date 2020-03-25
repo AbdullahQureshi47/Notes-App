@@ -1,114 +1,34 @@
 import React from "react";
+import { getItem, setItem } from "../localstorage";
 
 const INITIAL_STATE = [
   {
     id: "home",
     heading: "Home",
     theme: "yellow",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
+    notes: [],
   },
   {
     id: "work",
     heading: "Work",
     theme: "default",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
+    notes: [],
   },
   {
     id: "office",
     heading: "Office",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
+    notes: [],
   },
   {
     id: "school",
     heading: "School",
     theme: "pink",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
+    notes: [],
   },
   {
     id: "misc",
     heading: "Misc",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
+    notes: [],
   },
 ];
 
@@ -123,7 +43,10 @@ const useCategory = () => {
 };
 
 const CategoryProvider = ({ children }) => {
-  const [categories, setCategories] = React.useState(INITIAL_STATE);
+  const [categories, setCategories] = React.useState(
+    getItem() || INITIAL_STATE
+  );
+  React.useEffect(() => setItem(categories), [categories]);
   return (
     <CategoryContext.Provider value={{ categories, setCategories }}>
       {children}
