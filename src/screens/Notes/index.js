@@ -24,7 +24,7 @@ const Overlay = styled("div", {
   left: 0,
   width: "100%",
   height: "100%",
-  backgroundColor: "rgba(0,0,0,0.8)",
+  backgroundColor: "rgba(0,0,0,0.3)",
 });
 
 const Heading = styled("div", () => ({
@@ -64,6 +64,7 @@ export default () => {
             details={category}
           />
         ))}
+        <Category />
       </CategoryContainer>
     </NotesContainer>
   );

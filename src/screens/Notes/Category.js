@@ -6,13 +6,14 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
-  IconButton,
   PopoverContent,
   Popover,
   PopoverTrigger,
   PopoverBody,
   PopoverHeader,
+  Button,
 } from "@chakra-ui/core";
+import IconTheme from "../../color.svg";
 import { cardThemes } from "../../theme";
 import ThemePicker from "./ThemePicker";
 import Note from "./Note";
@@ -59,7 +60,7 @@ const NoteCardContainer = styled("div", () => ({
   width: "100%",
 }));
 
-export default ({ isFocused, details, onSelect, onClose }) => {
+export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
   const { heading = "", theme = "blue", notes = [], id } = details;
   const { setCategories } = useCategory();
   const handleChange = (e) => {
@@ -172,9 +173,10 @@ export default ({ isFocused, details, onSelect, onClose }) => {
         ))}
       </NoteCardContainer>
       <Note onUpdate={handleUpdateNote()} details={{}} mode="ADD" />
+
       <Popover placement="top">
         <PopoverTrigger>
-          <IconButton
+          <Button
             title="Choose theme"
             marginTop="1rem"
             float="right"
@@ -182,7 +184,13 @@ export default ({ isFocused, details, onSelect, onClose }) => {
             aria-label="Search database"
             icon="color"
             bg={cardThemes[theme].primaryColor}
-          />
+          >
+            <IconTheme
+              style={{
+                color: cardThemes[theme].fontColor,
+              }}
+            />
+          </Button>
         </PopoverTrigger>
         <PopoverContent width="10rem">
           <PopoverHeader color="black">Pick A theme</PopoverHeader>
