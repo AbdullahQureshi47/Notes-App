@@ -1,6 +1,6 @@
 const APP_KEY = "NOTES";
 
-export const getItem = () => JSON.parse(localStorage.getItem(APP_KEY) || "[]");
+export const getItem = () => JSON.parse(localStorage.getItem(APP_KEY));
 
 export const setItem = (item) => {
   if (!Array.isArray(item))
