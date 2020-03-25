@@ -12,16 +12,18 @@ import Datepicker from "react-datepicker";
 import theme from "../../theme";
 import Input from "../components/Input";
 
-const NoteCard = styled("div", () => ({
+const NoteCard = styled("div", ({ $focused }) => ({
   position: "relative",
-  padding: "1.2rem",
-  border: `2px solid ${theme.grey}`,
+  padding: $focused ? "1.2rem" : "0.4rem",
+  border: $focused ? `2px solid ${theme.grey}` : "none",
   width: "100%",
   borderRadius: "6px",
   marginTop: "1rem",
 }));
 
-const Note = styled("span", () => ({}));
+const Note = styled("div", () => ({
+  display: "flex",
+}));
 
 const Actions = styled("div", () => ({
   display: "flex",
@@ -56,7 +58,7 @@ export default ({ details = {} }) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const [isDateInputOpen, setIsDateInputOpen] = React.useState(false);
   return (
-    <NoteCard>
+    <NoteCard $focused={isFocused}>
       {isFocused && (
         <CloseButton
           position="absolute"
@@ -67,6 +69,7 @@ export default ({ details = {} }) => {
         />
       )}
       <Note>
+        <div>&bull; &nbsp;&nbsp;</div>
         <Editable
           value={content}
           onFocus={() => {

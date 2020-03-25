@@ -2,6 +2,7 @@ import React from "react";
 import { styled } from "styletron-react";
 import { set } from "dot-prop-immutable";
 import Category from "./Category";
+import { useCategory } from "../../contexts/useCategory";
 
 const NotesContainer = styled("div", () => ({
   width: "100vw",
@@ -39,116 +40,8 @@ const Heading = styled("div", () => ({
   position: "relative",
 }));
 
-const categories = [
-  {
-    id: "home",
-    heading: "Home",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "work",
-    heading: "Work",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "office",
-    heading: "Office",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "school",
-    heading: "School",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: "misc",
-    heading: "Misc",
-    notes: [
-      {
-        content: "Hello this is notes and this cant hurt u",
-        date: new Date(),
-        completed: false,
-      },
-      {
-        content: "Hello this is notesand this is the new one heheh",
-        date: new Date(),
-        completed: true,
-      },
-      {
-        content:
-          "Hello this is notes and this is the one that can or cannot hurt u",
-        date: new Date(),
-        completed: false,
-      },
-    ],
-  },
-];
-
 export default () => {
+  const { categories } = useCategory();
   const [selectedCategory, setSelectedCategory] = React.useState("");
   const handleSelectCategory = (id) => () => {
     setSelectedCategory(id);

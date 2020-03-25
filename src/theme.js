@@ -27,4 +27,10 @@ export const cardThemes = {
     primaryLight: "#e37cf7",
     fontColor: "#D9DDE2",
   },
+  yellow: {
+    backgroundColor: "#FFBA00",
+    primaryColor: "#F09B10",
+    primaryLight: "#F09B10",
+    fontColor: "#000",
+  },
 };
