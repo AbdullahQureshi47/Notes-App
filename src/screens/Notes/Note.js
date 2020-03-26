@@ -28,7 +28,7 @@ const Note = styled("div", () => ({
 const Actions = styled("div", () => ({
   display: "flex",
   marginTop: "1rem",
-  justifyContent: "flex-end",
+  justifyContent: "flex-start",
 }));
 
 const TimeContainer = styled("span", () => ({
@@ -38,7 +38,7 @@ const TimeContainer = styled("span", () => ({
 
 const FooterContainer = styled("div", () => ({
   display: "flex",
-  alignItems: "flex-end",
+  flexDirection: "column",
   justifyContent: "space-between",
 }));
 
@@ -54,7 +54,7 @@ const ButtonWithTooltip = ({ label = "", ...props }) => (
 );
 
 export default ({ details = {}, isCategoryFocused, onUpdate, onDelete }) => {
-  const { content = "", id, completionDate } = details;
+  const { content = "", id, completionDate, completed } = details;
   const [isFocused, setIsFocused] = React.useState(false);
   const handleAdd = (key, value) => {
     onUpdate({
@@ -75,7 +75,7 @@ export default ({ details = {}, isCategoryFocused, onUpdate, onDelete }) => {
         />
       )}
       <Note>
-        <div>&bull; &nbsp;&nbsp;</div>
+        <div>{completed ? "✔" : "●"} &nbsp;&nbsp;</div>
         <Editable
           key={Math.random()}
           onSubmit={(value) => value && handleAdd("content", value)}
@@ -120,6 +120,7 @@ export default ({ details = {}, isCategoryFocused, onUpdate, onDelete }) => {
               isRound={true}
               marginLeft="1rem"
               icon="check"
+              onClick={() => handleAdd("completed", true)}
             />
             <Datepicker
               minDate={Date.now()}
@@ -131,7 +132,7 @@ export default ({ details = {}, isCategoryFocused, onUpdate, onDelete }) => {
               showTimeInput
               customInput={
                 <ButtonWithTooltip
-                  label="Update Completion Date"
+                  label="Update Completion Time"
                   size="sm"
                   variant="outline"
                   isRound={true}
