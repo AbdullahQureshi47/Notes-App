@@ -12,6 +12,7 @@ import {
   PopoverBody,
   PopoverHeader,
   Button,
+  IconButton,
 } from "@chakra-ui/core";
 import IconTheme from "../../color.svg";
 import { cardThemes } from "../../theme";
@@ -76,6 +77,14 @@ export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
         return category;
       })
     );
+  };
+
+  const handleDeleteCategory = () => {
+    if (confirm("Are you sure you want to delete the category?")) {
+      setCategories((categories) =>
+        categories.filter((category) => category.id !== id)
+      );
+    }
   };
 
   const updateTheme = (color) =>
@@ -181,7 +190,7 @@ export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
             marginTop="1rem"
             float="right"
             size="sm"
-            aria-label="Search database"
+            aria-label="Choose The,e"
             icon="color"
             bg={cardThemes[theme].primaryColor}
           >
@@ -199,6 +208,17 @@ export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
           </PopoverBody>
         </PopoverContent>
       </Popover>
+      <IconButton
+        onClick={handleDeleteCategory}
+        icon="delete"
+        marginTop="1rem"
+        float="right"
+        aria-label="Delete Category"
+        size="sm"
+        color="white"
+        marginRight="1rem"
+        bg={cardThemes[theme].primaryColor}
+      />
     </Category>
   );
 };
