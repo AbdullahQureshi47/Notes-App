@@ -40,6 +40,16 @@ const Heading = styled("div", () => ({
   position: "relative",
 }));
 
+const CategoryAddButton = styled(Button, () => ({
+  minHeight: "14rem",
+  width: "21%",
+  padding: "2rem 1rem",
+  marginLeft: "3rem",
+  borderRadius: "6px",
+  cursor: "pointer",
+  color: theme.primaryColor,
+}));
+
 export default () => {
   const { categories, setCategories } = useCategory();
   const [selectedCategory, setSelectedCategory] = React.useState("");
@@ -75,7 +85,7 @@ export default () => {
             details={category}
           />
         ))}
-        <CategoryAddButton fontSize = "2rem" onClick={addCategory}>
+        <CategoryAddButton fontSize="2rem" onClick={addCategory}>
           + Add Category
         </CategoryAddButton>
       </CategoryContainer>
