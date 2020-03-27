@@ -36892,7 +36892,115 @@ function sheetify(styleRules, sortedCacheKeys) {
   });
   return sheets;
 }
-},{"inline-style-prefixer":"node_modules/inline-style-prefixer/es/index.js"}],"node_modules/styletron-standard/dist/browser.es5.es.js":[function(require,module,exports) {
+},{"inline-style-prefixer":"node_modules/inline-style-prefixer/es/index.js"}],"src/localstorage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.setItem = exports.getItem = void 0;
+var APP_KEY = "NOTES";
+
+var getItem = function getItem() {
+  return JSON.parse(localStorage.getItem(APP_KEY));
+};
+
+exports.getItem = getItem;
+
+var setItem = function setItem(item) {
+  if (!Array.isArray(item)) throw new Error("The items to set in ls should be an array");
+  localStorage.setItem(APP_KEY, JSON.stringify(item));
+};
+
+exports.setItem = setItem;
+},{}],"src/contexts/useCategory.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.useCategory = exports.CategoryProvider = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _localstorage = require("../localstorage");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var INITIAL_STATE = [{
+  id: "home",
+  heading: "Home",
+  theme: "yellow",
+  notes: []
+}, {
+  id: "work",
+  heading: "Work",
+  theme: "default",
+  notes: []
+}, {
+  id: "office",
+  heading: "Office",
+  notes: []
+}, {
+  id: "school",
+  heading: "School",
+  theme: "pink",
+  notes: []
+}, {
+  id: "misc",
+  heading: "Misc",
+  notes: []
+}];
+
+var CategoryContext = _react.default.createContext([]);
+
+var useCategory = function useCategory() {
+  var _React$useContext = _react.default.useContext(CategoryContext),
+      categories = _React$useContext.categories,
+      setCategories = _React$useContext.setCategories;
+
+  return {
+    categories: categories,
+    setCategories: setCategories
+  };
+};
+
+exports.useCategory = useCategory;
+
+var CategoryProvider = function CategoryProvider(_ref) {
+  var children = _ref.children;
+
+  var _React$useState = _react.default.useState((0, _localstorage.getItem)() || INITIAL_STATE),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      categories = _React$useState2[0],
+      setCategories = _React$useState2[1];
+
+  _react.default.useEffect(function () {
+    return (0, _localstorage.setItem)(categories);
+  }, [categories]);
+
+  return _react.default.createElement(CategoryContext.Provider, {
+    value: {
+      categories: categories,
+      setCategories: setCategories
+    }
+  }, children);
+};
+
+exports.CategoryProvider = CategoryProvider;
+},{"react":"node_modules/react/index.js","../localstorage":"src/localstorage.js"}],"node_modules/styletron-standard/dist/browser.es5.es.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -71326,115 +71434,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-},{"./Accordion":"node_modules/@chakra-ui/core/dist/es/Accordion/index.js","./Alert":"node_modules/@chakra-ui/core/dist/es/Alert/index.js","./AlertDialog":"node_modules/@chakra-ui/core/dist/es/AlertDialog/index.js","./Avatar":"node_modules/@chakra-ui/core/dist/es/Avatar/index.js","./AspectRatioBox":"node_modules/@chakra-ui/core/dist/es/AspectRatioBox/index.js","./AvatarGroup":"node_modules/@chakra-ui/core/dist/es/AvatarGroup/index.js","./Badge":"node_modules/@chakra-ui/core/dist/es/Badge/index.js","./Box":"node_modules/@chakra-ui/core/dist/es/Box/index.js","./Breadcrumb":"node_modules/@chakra-ui/core/dist/es/Breadcrumb/index.js","./Button":"node_modules/@chakra-ui/core/dist/es/Button/index.js","./ButtonGroup":"node_modules/@chakra-ui/core/dist/es/ButtonGroup/index.js","./Callout":"node_modules/@chakra-ui/core/dist/es/Callout/index.js","./Code":"node_modules/@chakra-ui/core/dist/es/Code/index.js","./Checkbox":"node_modules/@chakra-ui/core/dist/es/Checkbox/index.js","./CheckboxGroup":"node_modules/@chakra-ui/core/dist/es/CheckboxGroup/index.js","./CloseButton":"node_modules/@chakra-ui/core/dist/es/CloseButton/index.js","./Collapse":"node_modules/@chakra-ui/core/dist/es/Collapse/index.js","./ControlBox":"node_modules/@chakra-ui/core/dist/es/ControlBox/index.js","./ColorModeProvider":"node_modules/@chakra-ui/core/dist/es/ColorModeProvider/index.js","./Css":"node_modules/@chakra-ui/core/dist/es/Css/index.js","./CSSReset":"node_modules/@chakra-ui/core/dist/es/CSSReset/index.js","./CircularProgress":"node_modules/@chakra-ui/core/dist/es/CircularProgress/index.js","./Divider":"node_modules/@chakra-ui/core/dist/es/Divider/index.js","./Drawer":"node_modules/@chakra-ui/core/dist/es/Drawer/index.js","./Editable":"node_modules/@chakra-ui/core/dist/es/Editable/index.js","./Flex":"node_modules/@chakra-ui/core/dist/es/Flex/index.js","./FormControl":"node_modules/@chakra-ui/core/dist/es/FormControl/index.js","./FormHelperText":"node_modules/@chakra-ui/core/dist/es/FormHelperText/index.js","./FormLabel":"node_modules/@chakra-ui/core/dist/es/FormLabel/index.js","./FormErrorMessage":"node_modules/@chakra-ui/core/dist/es/FormErrorMessage/index.js","./Grid":"node_modules/@chakra-ui/core/dist/es/Grid/index.js","./Heading":"node_modules/@chakra-ui/core/dist/es/Heading/index.js","./Icon":"node_modules/@chakra-ui/core/dist/es/Icon/index.js","./IconButton":"node_modules/@chakra-ui/core/dist/es/IconButton/index.js","./Image":"node_modules/@chakra-ui/core/dist/es/Image/index.js","./Input":"node_modules/@chakra-ui/core/dist/es/Input/index.js","./InputAddon":"node_modules/@chakra-ui/core/dist/es/InputAddon/index.js","./InputGroup":"node_modules/@chakra-ui/core/dist/es/InputGroup/index.js","./InputElement":"node_modules/@chakra-ui/core/dist/es/InputElement/index.js","./Kbd":"node_modules/@chakra-ui/core/dist/es/Kbd/index.js","./Link":"node_modules/@chakra-ui/core/dist/es/Link/index.js","./List":"node_modules/@chakra-ui/core/dist/es/List/index.js","./Stack":"node_modules/@chakra-ui/core/dist/es/Stack/index.js","./SimpleGrid":"node_modules/@chakra-ui/core/dist/es/SimpleGrid/index.js","./Menu":"node_modules/@chakra-ui/core/dist/es/Menu/index.js","./Modal":"node_modules/@chakra-ui/core/dist/es/Modal/index.js","./NumberInput":"node_modules/@chakra-ui/core/dist/es/NumberInput/index.js","./Portal":"node_modules/@chakra-ui/core/dist/es/Portal/index.js","./Popover":"node_modules/@chakra-ui/core/dist/es/Popover/index.js","./Progress":"node_modules/@chakra-ui/core/dist/es/Progress/index.js","./PseudoBox":"node_modules/@chakra-ui/core/dist/es/PseudoBox/index.js","./Radio":"node_modules/@chakra-ui/core/dist/es/Radio/index.js","./RadioGroup":"node_modules/@chakra-ui/core/dist/es/RadioGroup/index.js","./RadioButtonGroup":"node_modules/@chakra-ui/core/dist/es/RadioButtonGroup/index.js","./Select":"node_modules/@chakra-ui/core/dist/es/Select/index.js","./Slider":"node_modules/@chakra-ui/core/dist/es/Slider/index.js","./Spinner":"node_modules/@chakra-ui/core/dist/es/Spinner/index.js","./Stat":"node_modules/@chakra-ui/core/dist/es/Stat/index.js","./Switch":"node_modules/@chakra-ui/core/dist/es/Switch/index.js","./Tabs":"node_modules/@chakra-ui/core/dist/es/Tabs/index.js","./Tag":"node_modules/@chakra-ui/core/dist/es/Tag/index.js","./Text":"node_modules/@chakra-ui/core/dist/es/Text/index.js","./Textarea":"node_modules/@chakra-ui/core/dist/es/Textarea/index.js","./Transition":"node_modules/@chakra-ui/core/dist/es/Transition/index.js","./Toast":"node_modules/@chakra-ui/core/dist/es/Toast/index.js","./Tooltip":"node_modules/@chakra-ui/core/dist/es/Tooltip/index.js","./theme":"node_modules/@chakra-ui/core/dist/es/theme/index.js","./ThemeProvider":"node_modules/@chakra-ui/core/dist/es/ThemeProvider/index.js","./useClipboard":"node_modules/@chakra-ui/core/dist/es/useClipboard/index.js","./useDisclosure":"node_modules/@chakra-ui/core/dist/es/useDisclosure/index.js","./usePrevious":"node_modules/@chakra-ui/core/dist/es/usePrevious/index.js","./useNumberInput":"node_modules/@chakra-ui/core/dist/es/useNumberInput/index.js","./VisuallyHidden":"node_modules/@chakra-ui/core/dist/es/VisuallyHidden/index.js"}],"src/localstorage.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.setItem = exports.getItem = void 0;
-var APP_KEY = "NOTES";
-
-var getItem = function getItem() {
-  return JSON.parse(localStorage.getItem(APP_KEY));
-};
-
-exports.getItem = getItem;
-
-var setItem = function setItem(item) {
-  if (!Array.isArray(item)) throw new Error("The items to set in ls should be an array");
-  localStorage.setItem(APP_KEY, JSON.stringify(item));
-};
-
-exports.setItem = setItem;
-},{}],"src/contexts/useCategory.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.useCategory = exports.CategoryProvider = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _localstorage = require("../localstorage");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-var INITIAL_STATE = [{
-  id: "home",
-  heading: "Home",
-  theme: "yellow",
-  notes: []
-}, {
-  id: "work",
-  heading: "Work",
-  theme: "default",
-  notes: []
-}, {
-  id: "office",
-  heading: "Office",
-  notes: []
-}, {
-  id: "school",
-  heading: "School",
-  theme: "pink",
-  notes: []
-}, {
-  id: "misc",
-  heading: "Misc",
-  notes: []
-}];
-
-var CategoryContext = _react.default.createContext([]);
-
-var useCategory = function useCategory() {
-  var _React$useContext = _react.default.useContext(CategoryContext),
-      categories = _React$useContext.categories,
-      setCategories = _React$useContext.setCategories;
-
-  return {
-    categories: categories,
-    setCategories: setCategories
-  };
-};
-
-exports.useCategory = useCategory;
-
-var CategoryProvider = function CategoryProvider(_ref) {
-  var children = _ref.children;
-
-  var _React$useState = _react.default.useState((0, _localstorage.getItem)() || INITIAL_STATE),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      categories = _React$useState2[0],
-      setCategories = _React$useState2[1];
-
-  _react.default.useEffect(function () {
-    return (0, _localstorage.setItem)(categories);
-  }, [categories]);
-
-  return _react.default.createElement(CategoryContext.Provider, {
-    value: {
-      categories: categories,
-      setCategories: setCategories
-    }
-  }, children);
-};
-
-exports.CategoryProvider = CategoryProvider;
-},{"react":"node_modules/react/index.js","../localstorage":"src/localstorage.js"}],"node_modules/resolve-pathname/esm/resolve-pathname.js":[function(require,module,exports) {
+},{"./Accordion":"node_modules/@chakra-ui/core/dist/es/Accordion/index.js","./Alert":"node_modules/@chakra-ui/core/dist/es/Alert/index.js","./AlertDialog":"node_modules/@chakra-ui/core/dist/es/AlertDialog/index.js","./Avatar":"node_modules/@chakra-ui/core/dist/es/Avatar/index.js","./AspectRatioBox":"node_modules/@chakra-ui/core/dist/es/AspectRatioBox/index.js","./AvatarGroup":"node_modules/@chakra-ui/core/dist/es/AvatarGroup/index.js","./Badge":"node_modules/@chakra-ui/core/dist/es/Badge/index.js","./Box":"node_modules/@chakra-ui/core/dist/es/Box/index.js","./Breadcrumb":"node_modules/@chakra-ui/core/dist/es/Breadcrumb/index.js","./Button":"node_modules/@chakra-ui/core/dist/es/Button/index.js","./ButtonGroup":"node_modules/@chakra-ui/core/dist/es/ButtonGroup/index.js","./Callout":"node_modules/@chakra-ui/core/dist/es/Callout/index.js","./Code":"node_modules/@chakra-ui/core/dist/es/Code/index.js","./Checkbox":"node_modules/@chakra-ui/core/dist/es/Checkbox/index.js","./CheckboxGroup":"node_modules/@chakra-ui/core/dist/es/CheckboxGroup/index.js","./CloseButton":"node_modules/@chakra-ui/core/dist/es/CloseButton/index.js","./Collapse":"node_modules/@chakra-ui/core/dist/es/Collapse/index.js","./ControlBox":"node_modules/@chakra-ui/core/dist/es/ControlBox/index.js","./ColorModeProvider":"node_modules/@chakra-ui/core/dist/es/ColorModeProvider/index.js","./Css":"node_modules/@chakra-ui/core/dist/es/Css/index.js","./CSSReset":"node_modules/@chakra-ui/core/dist/es/CSSReset/index.js","./CircularProgress":"node_modules/@chakra-ui/core/dist/es/CircularProgress/index.js","./Divider":"node_modules/@chakra-ui/core/dist/es/Divider/index.js","./Drawer":"node_modules/@chakra-ui/core/dist/es/Drawer/index.js","./Editable":"node_modules/@chakra-ui/core/dist/es/Editable/index.js","./Flex":"node_modules/@chakra-ui/core/dist/es/Flex/index.js","./FormControl":"node_modules/@chakra-ui/core/dist/es/FormControl/index.js","./FormHelperText":"node_modules/@chakra-ui/core/dist/es/FormHelperText/index.js","./FormLabel":"node_modules/@chakra-ui/core/dist/es/FormLabel/index.js","./FormErrorMessage":"node_modules/@chakra-ui/core/dist/es/FormErrorMessage/index.js","./Grid":"node_modules/@chakra-ui/core/dist/es/Grid/index.js","./Heading":"node_modules/@chakra-ui/core/dist/es/Heading/index.js","./Icon":"node_modules/@chakra-ui/core/dist/es/Icon/index.js","./IconButton":"node_modules/@chakra-ui/core/dist/es/IconButton/index.js","./Image":"node_modules/@chakra-ui/core/dist/es/Image/index.js","./Input":"node_modules/@chakra-ui/core/dist/es/Input/index.js","./InputAddon":"node_modules/@chakra-ui/core/dist/es/InputAddon/index.js","./InputGroup":"node_modules/@chakra-ui/core/dist/es/InputGroup/index.js","./InputElement":"node_modules/@chakra-ui/core/dist/es/InputElement/index.js","./Kbd":"node_modules/@chakra-ui/core/dist/es/Kbd/index.js","./Link":"node_modules/@chakra-ui/core/dist/es/Link/index.js","./List":"node_modules/@chakra-ui/core/dist/es/List/index.js","./Stack":"node_modules/@chakra-ui/core/dist/es/Stack/index.js","./SimpleGrid":"node_modules/@chakra-ui/core/dist/es/SimpleGrid/index.js","./Menu":"node_modules/@chakra-ui/core/dist/es/Menu/index.js","./Modal":"node_modules/@chakra-ui/core/dist/es/Modal/index.js","./NumberInput":"node_modules/@chakra-ui/core/dist/es/NumberInput/index.js","./Portal":"node_modules/@chakra-ui/core/dist/es/Portal/index.js","./Popover":"node_modules/@chakra-ui/core/dist/es/Popover/index.js","./Progress":"node_modules/@chakra-ui/core/dist/es/Progress/index.js","./PseudoBox":"node_modules/@chakra-ui/core/dist/es/PseudoBox/index.js","./Radio":"node_modules/@chakra-ui/core/dist/es/Radio/index.js","./RadioGroup":"node_modules/@chakra-ui/core/dist/es/RadioGroup/index.js","./RadioButtonGroup":"node_modules/@chakra-ui/core/dist/es/RadioButtonGroup/index.js","./Select":"node_modules/@chakra-ui/core/dist/es/Select/index.js","./Slider":"node_modules/@chakra-ui/core/dist/es/Slider/index.js","./Spinner":"node_modules/@chakra-ui/core/dist/es/Spinner/index.js","./Stat":"node_modules/@chakra-ui/core/dist/es/Stat/index.js","./Switch":"node_modules/@chakra-ui/core/dist/es/Switch/index.js","./Tabs":"node_modules/@chakra-ui/core/dist/es/Tabs/index.js","./Tag":"node_modules/@chakra-ui/core/dist/es/Tag/index.js","./Text":"node_modules/@chakra-ui/core/dist/es/Text/index.js","./Textarea":"node_modules/@chakra-ui/core/dist/es/Textarea/index.js","./Transition":"node_modules/@chakra-ui/core/dist/es/Transition/index.js","./Toast":"node_modules/@chakra-ui/core/dist/es/Toast/index.js","./Tooltip":"node_modules/@chakra-ui/core/dist/es/Tooltip/index.js","./theme":"node_modules/@chakra-ui/core/dist/es/theme/index.js","./ThemeProvider":"node_modules/@chakra-ui/core/dist/es/ThemeProvider/index.js","./useClipboard":"node_modules/@chakra-ui/core/dist/es/useClipboard/index.js","./useDisclosure":"node_modules/@chakra-ui/core/dist/es/useDisclosure/index.js","./usePrevious":"node_modules/@chakra-ui/core/dist/es/usePrevious/index.js","./useNumberInput":"node_modules/@chakra-ui/core/dist/es/useNumberInput/index.js","./VisuallyHidden":"node_modules/@chakra-ui/core/dist/es/VisuallyHidden/index.js"}],"node_modules/resolve-pathname/esm/resolve-pathname.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -74297,7 +74297,69 @@ if ("development" !== "production") {
     style: _propTypes.default.object
   });
 }
-},{"react-router":"node_modules/react-router/esm/react-router.js","@babel/runtime/helpers/esm/inheritsLoose":"node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"node_modules/react/index.js","history":"node_modules/history/esm/history.js","prop-types":"node_modules/prop-types/index.js","tiny-warning":"node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"src/screens/Home/index.js":[function(require,module,exports) {
+},{"react-router":"node_modules/react-router/esm/react-router.js","@babel/runtime/helpers/esm/inheritsLoose":"node_modules/@babel/runtime/helpers/esm/inheritsLoose.js","react":"node_modules/react/index.js","history":"node_modules/history/esm/history.js","prop-types":"node_modules/prop-types/index.js","tiny-warning":"node_modules/tiny-warning/dist/tiny-warning.esm.js","@babel/runtime/helpers/esm/extends":"node_modules/@babel/runtime/helpers/esm/extends.js","@babel/runtime/helpers/esm/objectWithoutPropertiesLoose":"node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js","tiny-invariant":"node_modules/tiny-invariant/dist/tiny-invariant.esm.js"}],"src/theme.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cardThemes = exports.default = void 0;
+var _default = {
+  backgroundColor: "#F4F5F7",
+  primaryColor: "#12CB84",
+  primaryLight: "#12CB84",
+  grey: "#747c8a",
+  fontColor: "#68808B",
+  borderColor: "#B8C9D3",
+  boxShadow: "0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)"
+};
+exports.default = _default;
+var cardThemes = {
+  default: {
+    backgroundColor: "#F4F5F7",
+    primaryColor: "#12CB84",
+    primaryLight: "#12CB84",
+    fontColor: "#68808B"
+  },
+  red: {
+    backgroundColor: "#f56271",
+    primaryColor: "#bd2b3a",
+    primaryLight: "#bd2b3a",
+    fontColor: "#000"
+  },
+  purple: {
+    backgroundColor: "#d86de8",
+    primaryColor: "#b360bf",
+    primaryLight: "#b360bf",
+    fontColor: "#000"
+  },
+  blue: {
+    backgroundColor: "#6ACFEF",
+    primaryColor: "#1a8be8",
+    primaryLight: "#1a8be8",
+    fontColor: "#000"
+  },
+  pink: {
+    backgroundColor: "#F996AE",
+    primaryColor: "#E91E63",
+    primaryLight: "#E91E63",
+    fontColor: "black"
+  },
+  yellow: {
+    backgroundColor: "#F6F0A3",
+    primaryColor: "#e8bf1a",
+    primaryLight: "#e8bf1a",
+    fontColor: "#000"
+  },
+  green: {
+    backgroundColor: "#9FF4DF",
+    fontColor: "black",
+    primaryColor: "#40bd61",
+    primaryLight: "#40bd61"
+  }
+};
+exports.cardThemes = cardThemes;
+},{}],"src/screens/Home/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -74309,6 +74371,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _styletronReact = require("styletron-react");
 
+var _theme = _interopRequireDefault(require("../../theme"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Container = (0, _styletronReact.styled)("div", function () {
@@ -74318,14 +74382,25 @@ var Container = (0, _styletronReact.styled)("div", function () {
     backgroundColor: "#32a852",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundAttachment: "fixed",
+    backgroundImage: "url('./assets/home-bg.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center"
   };
 });
 var Button = (0, _styletronReact.styled)("button", function () {
   return {
     padding: "2rem",
     fontSize: "2rem",
-    borderRadius: "6px"
+    borderRadius: "5rem",
+    backgroundColor: _theme.default.primaryColor,
+    color: "white",
+    outline: "none",
+    transition: "0.3s transform",
+    ":hover": {
+      transform: "translateY(-0.4rem)"
+    }
   };
 });
 
@@ -74335,11 +74410,868 @@ var _default = function _default(_ref) {
     onClick: function onClick() {
       return history.push("/notes");
     }
-  }, "Start your notes \uD83D\uDE42"));
+  }, "Start taking notes \uD83D\uDE42"));
 };
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js"}],"node_modules/uuid/dist/esm-browser/rng.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","../../theme":"src/theme.js"}],"node_modules/util/support/isBufferBrowser.js":[function(require,module,exports) {
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
+}
+},{}],"node_modules/util/node_modules/inherits/inherits_browser.js":[function(require,module,exports) {
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],"node_modules/util/util.js":[function(require,module,exports) {
+var process = require("process");
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors || function getOwnPropertyDescriptors(obj) {
+  var keys = Object.keys(obj);
+  var descriptors = {};
+
+  for (var i = 0; i < keys.length; i++) {
+    descriptors[keys[i]] = Object.getOwnPropertyDescriptor(obj, keys[i]);
+  }
+
+  return descriptors;
+};
+
+var formatRegExp = /%[sdj%]/g;
+
+exports.format = function (f) {
+  if (!isString(f)) {
+    var objects = [];
+
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function (x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+
+    switch (x) {
+      case '%s':
+        return String(args[i++]);
+
+      case '%d':
+        return Number(args[i++]);
+
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+
+      default:
+        return x;
+    }
+  });
+
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+
+  return str;
+}; // Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+
+
+exports.deprecate = function (fn, msg) {
+  if (typeof process !== 'undefined' && process.noDeprecation === true) {
+    return fn;
+  } // Allow for deprecating things in the process of starting up.
+
+
+  if (typeof process === 'undefined') {
+    return function () {
+      return exports.deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  var warned = false;
+
+  function deprecated() {
+    if (!warned) {
+      if (process.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+
+      warned = true;
+    }
+
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+};
+
+var debugs = {};
+var debugEnviron;
+
+exports.debuglog = function (set) {
+  if (isUndefined(debugEnviron)) debugEnviron = undefined || '';
+  set = set.toUpperCase();
+
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = process.pid;
+
+      debugs[set] = function () {
+        var msg = exports.format.apply(exports, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function () {};
+    }
+  }
+
+  return debugs[set];
+};
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+
+/* legacy: obj, showHidden, depth, colors*/
+
+
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  }; // legacy...
+
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  } // set default options
+
+
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+
+exports.inspect = inspect; // http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+
+inspect.colors = {
+  'bold': [1, 22],
+  'italic': [3, 23],
+  'underline': [4, 24],
+  'inverse': [7, 27],
+  'white': [37, 39],
+  'grey': [90, 39],
+  'black': [30, 39],
+  'blue': [34, 39],
+  'cyan': [36, 39],
+  'green': [32, 39],
+  'magenta': [35, 39],
+  'red': [31, 39],
+  'yellow': [33, 39]
+}; // Don't use 'blue' not visible on cmd.exe
+
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str + '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+function arrayToHash(array) {
+  var hash = {};
+  array.forEach(function (val, idx) {
+    hash[val] = true;
+  });
+  return hash;
+}
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect && value && isFunction(value.inspect) && // Filter out the util module, it's inspect function is special
+  value.inspect !== exports.inspect && // Also filter out any prototype objects using the circular check.
+  !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+
+    return ret;
+  } // Primitive types cannot have properties
+
+
+  var primitive = formatPrimitive(ctx, value);
+
+  if (primitive) {
+    return primitive;
+  } // Look up the keys of the object.
+
+
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  } // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+
+
+  if (isError(value) && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  } // Some type of object without properties can be shortcutted.
+
+
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '',
+      array = false,
+      braces = ['{', '}']; // Make Array say that they are Array
+
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  } // Make functions say that they are functions
+
+
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  } // Make RegExps say that they are RegExps
+
+
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  } // Make dates with properties first say the date
+
+
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  } // Make error with message first say the error
+
+
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+  var output;
+
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function (key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+  return reduceToSingleString(output, base, braces);
+}
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value)) return ctx.stylize('undefined', 'undefined');
+
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+
+  if (isNumber(value)) return ctx.stylize('' + value, 'number');
+  if (isBoolean(value)) return ctx.stylize('' + value, 'boolean'); // For some reason typeof null is "object", so special case here.
+
+  if (isNull(value)) return ctx.stylize('null', 'null');
+}
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+
+  keys.forEach(function (key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
+    }
+  });
+  return output;
+}
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || {
+    value: value[key]
+  };
+
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function (line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function (line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+
+    name = JSON.stringify('' + key);
+
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'").replace(/\\"/g, '"').replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function (prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] + (base === '' ? '' : base + '\n ') + ' ' + output.join(',\n  ') + ' ' + braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+} // NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+
+
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) && (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || typeof arg === 'symbol' || // ES6 symbol
+  typeof arg === 'undefined';
+}
+
+exports.isPrimitive = isPrimitive;
+exports.isBuffer = require('./support/isBuffer');
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; // 26 Feb 16:19:34
+
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()), pad(d.getMinutes()), pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+} // log is just a thin wrapper to console.log that prepends a timestamp
+
+
+exports.log = function () {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+
+
+exports.inherits = require('inherits');
+
+exports._extend = function (origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+  var keys = Object.keys(add);
+  var i = keys.length;
+
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+var kCustomPromisifiedSymbol = typeof Symbol !== 'undefined' ? Symbol('util.promisify.custom') : undefined;
+
+exports.promisify = function promisify(original) {
+  if (typeof original !== 'function') throw new TypeError('The "original" argument must be of type Function');
+
+  if (kCustomPromisifiedSymbol && original[kCustomPromisifiedSymbol]) {
+    var fn = original[kCustomPromisifiedSymbol];
+
+    if (typeof fn !== 'function') {
+      throw new TypeError('The "util.promisify.custom" argument must be of type Function');
+    }
+
+    Object.defineProperty(fn, kCustomPromisifiedSymbol, {
+      value: fn,
+      enumerable: false,
+      writable: false,
+      configurable: true
+    });
+    return fn;
+  }
+
+  function fn() {
+    var promiseResolve, promiseReject;
+    var promise = new Promise(function (resolve, reject) {
+      promiseResolve = resolve;
+      promiseReject = reject;
+    });
+    var args = [];
+
+    for (var i = 0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    args.push(function (err, value) {
+      if (err) {
+        promiseReject(err);
+      } else {
+        promiseResolve(value);
+      }
+    });
+
+    try {
+      original.apply(this, args);
+    } catch (err) {
+      promiseReject(err);
+    }
+
+    return promise;
+  }
+
+  Object.setPrototypeOf(fn, Object.getPrototypeOf(original));
+  if (kCustomPromisifiedSymbol) Object.defineProperty(fn, kCustomPromisifiedSymbol, {
+    value: fn,
+    enumerable: false,
+    writable: false,
+    configurable: true
+  });
+  return Object.defineProperties(fn, getOwnPropertyDescriptors(original));
+};
+
+exports.promisify.custom = kCustomPromisifiedSymbol;
+
+function callbackifyOnRejected(reason, cb) {
+  // `!reason` guard inspired by bluebird (Ref: https://goo.gl/t5IS6M).
+  // Because `null` is a special error value in callbacks which means "no error
+  // occurred", we error-wrap so the callback consumer can distinguish between
+  // "the promise rejected with null" or "the promise fulfilled with undefined".
+  if (!reason) {
+    var newReason = new Error('Promise was rejected with a falsy value');
+    newReason.reason = reason;
+    reason = newReason;
+  }
+
+  return cb(reason);
+}
+
+function callbackify(original) {
+  if (typeof original !== 'function') {
+    throw new TypeError('The "original" argument must be of type Function');
+  } // We DO NOT return the promise as it gives the user a false sense that
+  // the promise is actually somehow related to the callback's execution
+  // and that the callback throwing will reject the promise.
+
+
+  function callbackified() {
+    var args = [];
+
+    for (var i = 0; i < arguments.length; i++) {
+      args.push(arguments[i]);
+    }
+
+    var maybeCb = args.pop();
+
+    if (typeof maybeCb !== 'function') {
+      throw new TypeError('The last argument must be of type Function');
+    }
+
+    var self = this;
+
+    var cb = function () {
+      return maybeCb.apply(self, arguments);
+    }; // In true node style we process the callback on `nextTick` with all the
+    // implications (stack, `uncaughtException`, `async_hooks`)
+
+
+    original.apply(this, args).then(function (ret) {
+      process.nextTick(cb, null, ret);
+    }, function (rej) {
+      process.nextTick(callbackifyOnRejected, rej, cb);
+    });
+  }
+
+  Object.setPrototypeOf(callbackified, Object.getPrototypeOf(original));
+  Object.defineProperties(callbackified, getOwnPropertyDescriptors(original));
+  return callbackified;
+}
+
+exports.callbackify = callbackify;
+},{"./support/isBuffer":"node_modules/util/support/isBufferBrowser.js","inherits":"node_modules/util/node_modules/inherits/inherits_browser.js","process":"node_modules/process/browser.js"}],"node_modules/uuid/dist/rng-browser.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = rng;
+// Unique ID creation requires a high quality random # generator. In the browser we therefore
+// require the crypto API and do not support built-in fallback to lower quality random number
+// generators (like Math.random()).
+// getRandomValues needs to be invoked in a context where "this" is a Crypto implementation. Also,
+// find the complete implementation of crypto (msCrypto) on IE11.
+var getRandomValues = typeof crypto != 'undefined' && crypto.getRandomValues && crypto.getRandomValues.bind(crypto) || typeof msCrypto != 'undefined' && typeof msCrypto.getRandomValues == 'function' && msCrypto.getRandomValues.bind(msCrypto);
+var rnds8 = new Uint8Array(16); // eslint-disable-line no-undef
+
+function rng() {
+  if (!getRandomValues) {
+    throw new Error('crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported');
+  }
+
+  return getRandomValues(rnds8);
+}
+
+module.exports = exports.default;
+},{}],"node_modules/uuid/dist/bytesToUuid.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+var byteToHex = [];
+
+for (var i = 0; i < 256; ++i) {
+  byteToHex[i] = (i + 0x100).toString(16).substr(1);
+}
+
+function bytesToUuid(buf, offset) {
+  var i = offset || 0;
+  var bth = byteToHex; // join used to fix memory issue caused by concatenation: https://bugs.chromium.org/p/v8/issues/detail?id=3175#c4
+
+  return [bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], '-', bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]], bth[buf[i++]]].join('');
+}
+
+var _default = bytesToUuid;
+exports.default = _default;
+module.exports = exports.default;
+},{}],"node_modules/uuid/dist/v4.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _rng = _interopRequireDefault(require("./rng.js"));
+
+var _bytesToUuid = _interopRequireDefault(require("./bytesToUuid.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function v4(options, buf, offset) {
+  var i = buf && offset || 0;
+
+  if (typeof options == 'string') {
+    buf = options === 'binary' ? new Array(16) : null;
+    options = null;
+  }
+
+  options = options || {};
+
+  var rnds = options.random || (options.rng || _rng.default)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+
+
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+
+  if (buf) {
+    for (var ii = 0; ii < 16; ++ii) {
+      buf[i + ii] = rnds[ii];
+    }
+  }
+
+  return buf || (0, _bytesToUuid.default)(rnds);
+}
+
+var _default = v4;
+exports.default = _default;
+module.exports = exports.default;
+},{"./rng.js":"node_modules/uuid/dist/rng-browser.js","./bytesToUuid.js":"node_modules/uuid/dist/bytesToUuid.js"}],"node_modules/uuid/v4.js":[function(require,module,exports) {
+const util = require('util');
+
+const v4 = require('./dist/v4.js');
+
+module.exports = util.deprecate(
+  v4,
+  "Deep requiring like `const uuidv4 = require('uuid/v4');` is deprecated as of uuid@7.x. Please require the top-level module when using the Node.js CommonJS module or use ECMAScript Modules when bundling for the browser. See https://github.com/uuidjs/uuid#deep-requires-now-deprecated for more information.",
+);
+
+},{"util":"node_modules/util/util.js","./dist/v4.js":"node_modules/uuid/dist/v4.js"}],"node_modules/uuid/dist/esm-browser/rng.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -75059,63 +75991,7 @@ function SvgColor(props) {
 
 var _default = SvgColor;
 exports.default = _default;
-},{"react":"node_modules/react/index.js"}],"src/theme.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.cardThemes = exports.default = void 0;
-var _default = {
-  backgroundColor: "#F4F5F7",
-  primaryColor: "#12CB84",
-  primaryLight: "#12CB84",
-  grey: "#B8C9D3",
-  fontColor: "#68808B",
-  borderColor: "#B8C9D3",
-  boxShadow: "0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)"
-};
-exports.default = _default;
-var cardThemes = {
-  default: {
-    backgroundColor: "#F4F5F7",
-    primaryColor: "#12CB84",
-    primaryLight: "#12CB84",
-    fontColor: "#68808B"
-  },
-  red: {
-    backgroundColor: "#F44335",
-    primaryColor: "#D3302F",
-    primaryLight: "#D3302F",
-    fontColor: "#FFFFFF"
-  },
-  purple: {
-    backgroundColor: "#9B28B0",
-    primaryColor: "#7B20A1",
-    primaryLight: "#7B20A1",
-    fontColor: "#FFFFFF"
-  },
-  blue: {
-    backgroundColor: "#3F51B5",
-    primaryColor: "#313F9F",
-    primaryLight: "#313F9F",
-    fontColor: "#F9FAFC"
-  },
-  pink: {
-    backgroundColor: "#E91E63",
-    primaryColor: "#C2195A",
-    primaryLight: "#C2195A",
-    fontColor: "#D9DDE2"
-  },
-  yellow: {
-    backgroundColor: "#FFBA00",
-    primaryColor: "#F09B10",
-    primaryLight: "#F09B10",
-    fontColor: "#000"
-  }
-};
-exports.cardThemes = cardThemes;
-},{}],"src/screens/Notes/ThemePicker.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js"}],"src/screens/Notes/ThemePicker.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -94513,7 +95389,40 @@ var define;
 var global = arguments[3];
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t(exports,require("react"),require("prop-types"),require("classnames"),require("date-fns/isDate"),require("date-fns/isValid"),require("date-fns/format"),require("date-fns/addMinutes"),require("date-fns/addHours"),require("date-fns/addDays"),require("date-fns/addWeeks"),require("date-fns/addMonths"),require("date-fns/addYears"),require("date-fns/subMinutes"),require("date-fns/subHours"),require("date-fns/subDays"),require("date-fns/subWeeks"),require("date-fns/subMonths"),require("date-fns/subYears"),require("date-fns/getSeconds"),require("date-fns/getMinutes"),require("date-fns/getHours"),require("date-fns/getDay"),require("date-fns/getDate"),require("date-fns/getWeek"),require("date-fns/getMonth"),require("date-fns/getQuarter"),require("date-fns/getYear"),require("date-fns/getTime"),require("date-fns/setSeconds"),require("date-fns/setMinutes"),require("date-fns/setHours"),require("date-fns/setMonth"),require("date-fns/setQuarter"),require("date-fns/setYear"),require("date-fns/min"),require("date-fns/max"),require("date-fns/differenceInCalendarDays"),require("date-fns/differenceInCalendarMonths"),require("date-fns/differenceInCalendarWeeks"),require("date-fns/differenceInCalendarYears"),require("date-fns/startOfDay"),require("date-fns/startOfWeek"),require("date-fns/startOfMonth"),require("date-fns/startOfQuarter"),require("date-fns/startOfYear"),require("date-fns/endOfDay"),require("date-fns/endOfWeek"),require("date-fns/endOfMonth"),require("date-fns/isEqual"),require("date-fns/isSameDay"),require("date-fns/isSameMonth"),require("date-fns/isSameYear"),require("date-fns/isSameQuarter"),require("date-fns/isAfter"),require("date-fns/isBefore"),require("date-fns/isWithinInterval"),require("date-fns/toDate"),require("date-fns/parse"),require("date-fns/parseISO"),require("react-onclickoutside"),require("react-popper")):"function"==typeof define&&define.amd?define(["exports","react","prop-types","classnames","date-fns/isDate","date-fns/isValid","date-fns/format","date-fns/addMinutes","date-fns/addHours","date-fns/addDays","date-fns/addWeeks","date-fns/addMonths","date-fns/addYears","date-fns/subMinutes","date-fns/subHours","date-fns/subDays","date-fns/subWeeks","date-fns/subMonths","date-fns/subYears","date-fns/getSeconds","date-fns/getMinutes","date-fns/getHours","date-fns/getDay","date-fns/getDate","date-fns/getWeek","date-fns/getMonth","date-fns/getQuarter","date-fns/getYear","date-fns/getTime","date-fns/setSeconds","date-fns/setMinutes","date-fns/setHours","date-fns/setMonth","date-fns/setQuarter","date-fns/setYear","date-fns/min","date-fns/max","date-fns/differenceInCalendarDays","date-fns/differenceInCalendarMonths","date-fns/differenceInCalendarWeeks","date-fns/differenceInCalendarYears","date-fns/startOfDay","date-fns/startOfWeek","date-fns/startOfMonth","date-fns/startOfQuarter","date-fns/startOfYear","date-fns/endOfDay","date-fns/endOfWeek","date-fns/endOfMonth","date-fns/isEqual","date-fns/isSameDay","date-fns/isSameMonth","date-fns/isSameYear","date-fns/isSameQuarter","date-fns/isAfter","date-fns/isBefore","date-fns/isWithinInterval","date-fns/toDate","date-fns/parse","date-fns/parseISO","react-onclickoutside","react-popper"],t):t((e=e||self).DatePicker={},e.React,e.PropTypes,e.classNames,e.isDate,e.isValidDate,e.format,e.addMinutes,e.addHours,e.utils,e.utils$1,e.addMonths,e.addYears,e.subMinutes,e.subHours,e.subDays,e.subWeeks,e.subMonths,e.subYears,e.getSeconds,e.getMinutes,e.getHours,e.getDay,e.getDate,e.dfgetWeek,e.getMonth,e.getQuarter,e.getYear,e.getTime,e.setSeconds,e.setMinutes,e.setHours,e.utils$2,e.utils$3,e.setYear,e.min,e.max,e.differenceInCalendarDays,e.differenceInCalendarMonths,e.differenceInCalendarWeeks,e.differenceInCalendarYears,e.startOfDay,e.startOfWeek,e.startOfMonth,e.startOfQuarter,e.startOfYear,e.endOfDay,e.endOfWeek,e.endOfMonth,e.dfIsEqual,e.dfIsSameDay,e.dfIsSameMonth,e.dfIsSameYear,e.dfIsSameQuarter,e.isAfter,e.isBefore,e.isWithinInterval,e.toDate,e.parse,e.parseISO,e.onClickOutside,e.ReactPopper)}(this,(function(e,t,r,n,a,o,s,i,p,c,l,d,u,h,f,m,y,D,v,w,g,k,b,C,_,S,M,O,P,E,N,x,T,Y,I,L,q,F,W,A,B,R,j,H,K,Q,V,U,$,z,G,J,X,Z,ee,te,re,ne,ae,oe,se,ie){"use strict";function pe(e){return(pe="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function ce(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function le(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function de(e,t,r){return t&&le(e.prototype,t),r&&le(e,r),e}function ue(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}function he(){return(he=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var r=arguments[t];for(var n in r)Object.prototype.hasOwnProperty.call(r,n)&&(e[n]=r[n])}return e}).apply(this,arguments)}function fe(e,t){var r=Object.keys(e);if(Object.getOwnPropertySymbols){var n=Object.getOwnPropertySymbols(e);t&&(n=n.filter((function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),r.push.apply(r,n)}return r}function me(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&De(e,t)}function ye(e){return(ye=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function De(e,t){return(De=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}function ve(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function we(e,t){return!t||"object"!=typeof t&&"function"!=typeof t?ve(e):t}function ge(e,t){switch(e){case"P":return t.date({width:"short"});case"PP":return t.date({width:"medium"});case"PPP":return t.date({width:"long"});case"PPPP":default:return t.date({width:"full"})}}function ke(e,t){switch(e){case"p":return t.time({width:"short"});case"pp":return t.time({width:"medium"});case"ppp":return t.time({width:"long"});case"pppp":default:return t.time({width:"full"})}}t=t&&t.hasOwnProperty("default")?t.default:t,r=r&&r.hasOwnProperty("default")?r.default:r,n=n&&n.hasOwnProperty("default")?n.default:n,a=a&&a.hasOwnProperty("default")?a.default:a,o=o&&o.hasOwnProperty("default")?o.default:o,s=s&&s.hasOwnProperty("default")?s.default:s,i=i&&i.hasOwnProperty("default")?i.default:i,p=p&&p.hasOwnProperty("default")?p.default:p,c=c&&c.hasOwnProperty("default")?c.default:c,l=l&&l.hasOwnProperty("default")?l.default:l,d=d&&d.hasOwnProperty("default")?d.default:d,u=u&&u.hasOwnProperty("default")?u.default:u,h=h&&h.hasOwnProperty("default")?h.default:h,f=f&&f.hasOwnProperty("default")?f.default:f,m=m&&m.hasOwnProperty("default")?m.default:m,y=y&&y.hasOwnProperty("default")?y.default:y,D=D&&D.hasOwnProperty("default")?D.default:D,v=v&&v.hasOwnProperty("default")?v.default:v,w=w&&w.hasOwnProperty("default")?w.default:w,g=g&&g.hasOwnProperty("default")?g.default:g,k=k&&k.hasOwnProperty("default")?k.default:k,b=b&&b.hasOwnProperty("default")?b.default:b,C=C&&C.hasOwnProperty("default")?C.default:C,_=_&&_.hasOwnProperty("default")?_.default:_,S=S&&S.hasOwnProperty("default")?S.default:S,M=M&&M.hasOwnProperty("default")?M.default:M,O=O&&O.hasOwnProperty("default")?O.default:O,P=P&&P.hasOwnProperty("default")?P.default:P,E=E&&E.hasOwnProperty("default")?E.default:E,N=N&&N.hasOwnProperty("default")?N.default:N,x=x&&x.hasOwnProperty("default")?x.default:x,T=T&&T.hasOwnProperty("default")?T.default:T,Y=Y&&Y.hasOwnProperty("default")?Y.default:Y,I=I&&I.hasOwnProperty("default")?I.default:I,L=L&&L.hasOwnProperty("default")?L.default:L,q=q&&q.hasOwnProperty("default")?q.default:q,F=F&&F.hasOwnProperty("default")?F.default:F,W=W&&W.hasOwnProperty("default")?W.default:W,A=A&&A.hasOwnProperty("default")?A.default:A,B=B&&B.hasOwnProperty("default")?B.default:B,R=R&&R.hasOwnProperty("default")?R.default:R,j=j&&j.hasOwnProperty("default")?j.default:j,H=H&&H.hasOwnProperty("default")?H.default:H,K=K&&K.hasOwnProperty("default")?K.default:K,Q=Q&&Q.hasOwnProperty("default")?Q.default:Q,V=V&&V.hasOwnProperty("default")?V.default:V,U=U&&U.hasOwnProperty("default")?U.default:U,$=$&&$.hasOwnProperty("default")?$.default:$,z=z&&z.hasOwnProperty("default")?z.default:z,G=G&&G.hasOwnProperty("default")?G.default:G,J=J&&J.hasOwnProperty("default")?J.default:J,X=X&&X.hasOwnProperty("default")?X.default:X,Z=Z&&Z.hasOwnProperty("default")?Z.default:Z,ee=ee&&ee.hasOwnProperty("default")?ee.default:ee,te=te&&te.hasOwnProperty("default")?te.default:te,re=re&&re.hasOwnProperty("default")?re.default:re,ne=ne&&ne.hasOwnProperty("default")?ne.default:ne,ae=ae&&ae.hasOwnProperty("default")?ae.default:ae,oe=oe&&oe.hasOwnProperty("default")?oe.default:oe,se=se&&se.hasOwnProperty("default")?se.default:se;var be={p:ke,P:function(e,t){var r,n=e.match(/(P+)(p+)?/),a=n[1],o=n[2];if(!o)return ge(e,t);switch(a){case"P":r=t.dateTime({width:"short"});break;case"PP":r=t.dateTime({width:"medium"});break;case"PPP":r=t.dateTime({width:"long"});break;case"PPPP":default:r=t.dateTime({width:"full"})}return r.replace("{{date}}",ge(a,t)).replace("{{time}}",ke(o,t))}},Ce=/P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;function _e(e){var t=e?"string"==typeof e||e instanceof String?oe(e):ne(e):new Date;return Me(t)?t:null}function Se(e,t,r,n){var a=null,o=We(r)||Fe(),i=!0;return Array.isArray(t)?(t.forEach((function(t){var r=ae(e,t,new Date,{locale:o});n&&(i=Me(r)&&e===s(r,t,{awareOfUnicodeTokens:!0})),Me(r)&&i&&(a=r)})),a):(a=ae(e,t,new Date,{locale:o}),n?i=Me(a)&&e===s(a,t,{awareOfUnicodeTokens:!0}):Me(a)||(t=t.match(Ce).map((function(e){var t=e[0];if("p"===t||"P"===t){var r=be[t];return o?r(e,o.formatLong):t}return e})).join(""),e.length>0&&(a=ae(e,t.slice(0,e.length),new Date)),Me(a)||(a=new Date(e))),Me(a)&&i?a:null)}function Me(e){return o(e)&&ee(e,new Date("1/1/1000"))}function Oe(e,t,r){if("en"===r)return s(e,t,{awareOfUnicodeTokens:!0});var n=We(r);return r&&!n&&console.warn('A locale object was not found for the provided string ["'.concat(r,'"].')),!n&&Fe()&&We(Fe())&&(n=We(Fe())),s(e,t,{locale:n||null,awareOfUnicodeTokens:!0})}function Pe(e,t){var r=t.hour,n=void 0===r?0:r,a=t.minute,o=void 0===a?0:a,s=t.second;return x(N(E(e,void 0===s?0:s),o),n)}function Ee(e,t){var r=We(t||Fe());return j(e,{locale:r})}function Ne(e){return H(e)}function xe(e,t){return e&&t?X(e,t):!e&&!t}function Te(e,t){return e&&t?J(e,t):!e&&!t}function Ye(e,t){return e&&t?Z(e,t):!e&&!t}function Ie(e,t){return e&&t?G(e,t):!e&&!t}function Le(e,t){return e&&t?z(e,t):!e&&!t}function qe(e,t,r){var n,a=R(t),o=V(r);try{n=re(e,{start:a,end:o})}catch(e){n=!1}return n}function Fe(){return("undefined"!=typeof window?window:global).__localeId__}function We(e){if("string"==typeof e){var t="undefined"!=typeof window?window:global;return t.__localeData__?t.__localeData__[e]:null}return e}function Ae(e,t){return Oe(T(_e(),e),"LLL",t)}function Be(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.maxDate,a=t.excludeDates,o=t.includeDates,s=t.filterDate;return Qe(e,{minDate:r,maxDate:n})||a&&a.some((function(t){return Ie(e,t)}))||o&&!o.some((function(t){return Ie(e,t)}))||s&&!s(_e(e))||!1}function Re(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.maxDate,a=t.excludeDates,o=t.includeDates,s=t.filterDate;return Qe(e,{minDate:r,maxDate:n})||a&&a.some((function(t){return Te(e,t)}))||o&&!o.some((function(t){return Te(e,t)}))||s&&!s(_e(e))||!1}function je(e,t,r,n){var a=O(e),o=S(e),s=O(t),i=S(t),p=O(n);return a===s&&a===p?o<=r&&r<=i:a<s?p===a&&o<=r||p===s&&i>=r||p<s&&p>a:void 0}function He(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.maxDate,a=t.excludeDates,o=t.includeDates,s=t.filterDate;return Qe(e,{minDate:r,maxDate:n})||a&&a.some((function(t){return Ye(e,t)}))||o&&!o.some((function(t){return Ye(e,t)}))||s&&!s(_e(e))||!1}function Ke(e,t,r,n){var a=O(e),o=M(e),s=O(t),i=M(t),p=O(n);return a===s&&a===p?o<=r&&r<=i:a<s?p===a&&o<=r||p===s&&i>=r||p<s&&p>a:void 0}function Qe(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.maxDate;return r&&F(e,r)<0||n&&F(e,n)>0}function Ve(e,t){for(var r=t.length,n=0;n<r;n++)if(k(t[n])===k(e)&&g(t[n])===g(e))return!0;return!1}function Ue(e,t){var r=t.minTime,n=t.maxTime;if(!r||!n)throw new Error("Both minTime and maxTime props required");var a,o=_e(),s=x(N(o,g(e)),k(e)),i=x(N(o,g(r)),k(r)),p=x(N(o,g(n)),k(n));try{a=!re(s,{start:i,end:p})}catch(e){a=!1}return a}function $e(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.includeDates,a=D(e,1);return r&&W(r,a)>0||n&&n.every((function(e){return W(e,a)>0}))||!1}function ze(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.maxDate,n=t.includeDates,a=d(e,1);return r&&W(a,r)>0||n&&n.every((function(e){return W(a,e)>0}))||!1}function Ge(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.minDate,n=t.includeDates,a=v(e,1);return r&&B(r,a)>0||n&&n.every((function(e){return B(e,a)>0}))||!1}function Je(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},r=t.maxDate,n=t.includeDates,a=u(e,1);return r&&B(a,r)>0||n&&n.every((function(e){return B(a,e)>0}))||!1}function Xe(e){var t=e.minDate,r=e.includeDates;if(r&&t){var n=r.filter((function(e){return F(e,t)>=0}));return L(n)}return r?L(r):t}function Ze(e){var t=e.maxDate,r=e.includeDates;if(r&&t){var n=r.filter((function(e){return F(e,t)<=0}));return q(n)}return r?q(r):t}function et(){for(var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[],t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"react-datepicker__day--highlighted",r=new Map,n=0,o=e.length;n<o;n++){var s=e[n];if(a(s)){var i=Oe(s,"MM.dd.yyyy"),p=r.get(i)||[];p.includes(t)||(p.push(t),r.set(i,p))}else if("object"===pe(s)){var c=Object.keys(s),l=c[0],d=s[c[0]];if("string"==typeof l&&d.constructor===Array)for(var u=0,h=d.length;u<h;u++){var f=Oe(d[u],"MM.dd.yyyy"),m=r.get(f)||[];m.includes(l)||(m.push(l),r.set(f,m))}}}return r}function tt(e,t,r,n,a){for(var o=a.length,s=[],c=0;c<o;c++){var l=i(p(e,k(a[c])),g(a[c])),d=i(e,(r+1)*n);ee(l,t)&&te(l,d)&&s.push(a[c])}return s}function rt(e){return e<10?"0".concat(e):"".concat(e)}function nt(e,t,r,n){for(var a=[],o=0;o<2*t+1;o++){var s=e+t-o,i=!0;r&&(i=O(r)<=s),n&&i&&(i=O(n)>=s),i&&a.push(s)}return a}var at=se(function(e){function r(e){var n;ce(this,r),ue(ve(n=we(this,ye(r).call(this,e))),"renderOptions",(function(){var e=n.props.year,r=n.state.yearsList.map((function(r){return t.createElement("div",{className:e===r?"react-datepicker__year-option react-datepicker__year-option--selected_year":"react-datepicker__year-option",key:r,ref:r,onClick:n.onChange.bind(ve(n),r)},e===r?t.createElement("span",{className:"react-datepicker__year-option--selected"},"✓"):"",r)})),a=n.props.minDate?O(n.props.minDate):null,o=n.props.maxDate?O(n.props.maxDate):null;return o&&n.state.yearsList.find((function(e){return e===o}))||r.unshift(t.createElement("div",{className:"react-datepicker__year-option",ref:"upcoming",key:"upcoming",onClick:n.incrementYears},t.createElement("a",{className:"react-datepicker__navigation react-datepicker__navigation--years react-datepicker__navigation--years-upcoming"}))),a&&n.state.yearsList.find((function(e){return e===a}))||r.push(t.createElement("div",{className:"react-datepicker__year-option",ref:"previous",key:"previous",onClick:n.decrementYears},t.createElement("a",{className:"react-datepicker__navigation react-datepicker__navigation--years react-datepicker__navigation--years-previous"}))),r})),ue(ve(n),"onChange",(function(e){n.props.onChange(e)})),ue(ve(n),"handleClickOutside",(function(){n.props.onCancel()})),ue(ve(n),"shiftYears",(function(e){var t=n.state.yearsList.map((function(t){return t+e}));n.setState({yearsList:t})})),ue(ve(n),"incrementYears",(function(){return n.shiftYears(1)})),ue(ve(n),"decrementYears",(function(){return n.shiftYears(-1)}));var a=e.yearDropdownItemNumber,o=e.scrollableYearDropdown,s=a||(o?10:5);return n.state={yearsList:nt(n.props.year,s,n.props.minDate,n.props.maxDate)},n}return me(r,e),de(r,[{key:"render",value:function(){var e=n({"react-datepicker__year-dropdown":!0,"react-datepicker__year-dropdown--scrollable":this.props.scrollableYearDropdown});return t.createElement("div",{className:e},this.renderOptions())}}]),r}(t.Component)),ot=function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"state",{dropdownVisible:!1}),ue(ve(n),"renderSelectOptions",(function(){for(var e=n.props.minDate?O(n.props.minDate):1900,r=n.props.maxDate?O(n.props.maxDate):2100,a=[],o=e;o<=r;o++)a.push(t.createElement("option",{key:o,value:o},o));return a})),ue(ve(n),"onSelectChange",(function(e){n.onChange(e.target.value)})),ue(ve(n),"renderSelectMode",(function(){return t.createElement("select",{value:n.props.year,className:"react-datepicker__year-select",onChange:n.onSelectChange},n.renderSelectOptions())})),ue(ve(n),"renderReadView",(function(e){return t.createElement("div",{key:"read",style:{visibility:e?"visible":"hidden"},className:"react-datepicker__year-read-view",onClick:function(e){return n.toggleDropdown(e)}},t.createElement("span",{className:"react-datepicker__year-read-view--down-arrow"}),t.createElement("span",{className:"react-datepicker__year-read-view--selected-year"},n.props.year))})),ue(ve(n),"renderDropdown",(function(){return t.createElement(at,{key:"dropdown",ref:"options",year:n.props.year,onChange:n.onChange,onCancel:n.toggleDropdown,minDate:n.props.minDate,maxDate:n.props.maxDate,scrollableYearDropdown:n.props.scrollableYearDropdown,yearDropdownItemNumber:n.props.yearDropdownItemNumber})})),ue(ve(n),"renderScrollMode",(function(){var e=n.state.dropdownVisible,t=[n.renderReadView(!e)];return e&&t.unshift(n.renderDropdown()),t})),ue(ve(n),"onChange",(function(e){n.toggleDropdown(),e!==n.props.year&&n.props.onChange(e)})),ue(ve(n),"toggleDropdown",(function(e){n.setState({dropdownVisible:!n.state.dropdownVisible},(function(){n.props.adjustDateOnChange&&n.handleYearChange(n.props.date,e)}))})),ue(ve(n),"handleYearChange",(function(e,t){n.onSelect(e,t),n.setOpen()})),ue(ve(n),"onSelect",(function(e,t){n.props.onSelect&&n.props.onSelect(e,t)})),ue(ve(n),"setOpen",(function(){n.props.setOpen&&n.props.setOpen(!0)})),n}return me(r,e),de(r,[{key:"render",value:function(){var e;switch(this.props.dropdownMode){case"scroll":e=this.renderScrollMode();break;case"select":e=this.renderSelectMode()}return t.createElement("div",{className:"react-datepicker__year-dropdown-container react-datepicker__year-dropdown-container--".concat(this.props.dropdownMode)},e)}}]),r}(t.Component),st=se(function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"renderOptions",(function(){return n.props.monthNames.map((function(e,r){return t.createElement("div",{className:n.props.month===r?"react-datepicker__month-option react-datepicker__month-option--selected_month":"react-datepicker__month-option",key:e,ref:e,onClick:n.onChange.bind(ve(n),r)},n.props.month===r?t.createElement("span",{className:"react-datepicker__month-option--selected"},"✓"):"",e)}))})),ue(ve(n),"onChange",(function(e){return n.props.onChange(e)})),ue(ve(n),"handleClickOutside",(function(){return n.props.onCancel()})),n}return me(r,e),de(r,[{key:"render",value:function(){return t.createElement("div",{className:"react-datepicker__month-dropdown"},this.renderOptions())}}]),r}(t.Component)),it=function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"state",{dropdownVisible:!1}),ue(ve(n),"renderSelectOptions",(function(e){return e.map((function(e,r){return t.createElement("option",{key:r,value:r},e)}))})),ue(ve(n),"renderSelectMode",(function(e){return t.createElement("select",{value:n.props.month,className:"react-datepicker__month-select",onChange:function(e){return n.onChange(e.target.value)}},n.renderSelectOptions(e))})),ue(ve(n),"renderReadView",(function(e,r){return t.createElement("div",{key:"read",style:{visibility:e?"visible":"hidden"},className:"react-datepicker__month-read-view",onClick:n.toggleDropdown},t.createElement("span",{className:"react-datepicker__month-read-view--down-arrow"}),t.createElement("span",{className:"react-datepicker__month-read-view--selected-month"},r[n.props.month]))})),ue(ve(n),"renderDropdown",(function(e){return t.createElement(st,{key:"dropdown",ref:"options",month:n.props.month,monthNames:e,onChange:n.onChange,onCancel:n.toggleDropdown})})),ue(ve(n),"renderScrollMode",(function(e){var t=n.state.dropdownVisible,r=[n.renderReadView(!t,e)];return t&&r.unshift(n.renderDropdown(e)),r})),ue(ve(n),"onChange",(function(e){n.toggleDropdown(),e!==n.props.month&&n.props.onChange(e)})),ue(ve(n),"toggleDropdown",(function(){return n.setState({dropdownVisible:!n.state.dropdownVisible})})),n}return me(r,e),de(r,[{key:"render",value:function(){var e,r=this,n=[0,1,2,3,4,5,6,7,8,9,10,11].map(this.props.useShortMonthInDropdown?function(e){return Ae(e,r.props.locale)}:function(e){return t=e,n=r.props.locale,Oe(T(_e(),t),"LLLL",n);var t,n});switch(this.props.dropdownMode){case"scroll":e=this.renderScrollMode(n);break;case"select":e=this.renderSelectMode(n)}return t.createElement("div",{className:"react-datepicker__month-dropdown-container react-datepicker__month-dropdown-container--".concat(this.props.dropdownMode)},e)}}]),r}(t.Component);function pt(e,t){for(var r=[],n=Ne(e),a=Ne(t);!ee(n,a);)r.push(_e(n)),n=d(n,1);return r}var ct=se(function(e){function r(e){var n;return ce(this,r),ue(ve(n=we(this,ye(r).call(this,e))),"renderOptions",(function(){return n.state.monthYearsList.map((function(e){var r=P(e),a=xe(n.props.date,e)&&Te(n.props.date,e);return t.createElement("div",{className:a?"react-datepicker__month-year-option --selected_month-year":"react-datepicker__month-year-option",key:r,ref:r,onClick:n.onChange.bind(ve(n),r)},a?t.createElement("span",{className:"react-datepicker__month-year-option--selected"},"✓"):"",Oe(e,n.props.dateFormat))}))})),ue(ve(n),"onChange",(function(e){return n.props.onChange(e)})),ue(ve(n),"handleClickOutside",(function(){n.props.onCancel()})),n.state={monthYearsList:pt(n.props.minDate,n.props.maxDate)},n}return me(r,e),de(r,[{key:"render",value:function(){var e=n({"react-datepicker__month-year-dropdown":!0,"react-datepicker__month-year-dropdown--scrollable":this.props.scrollableMonthYearDropdown});return t.createElement("div",{className:e},this.renderOptions())}}]),r}(t.Component)),lt=function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"state",{dropdownVisible:!1}),ue(ve(n),"renderSelectOptions",(function(){for(var e=Ne(n.props.minDate),r=Ne(n.props.maxDate),a=[];!ee(e,r);){var o=P(e);a.push(t.createElement("option",{key:o,value:o},Oe(e,n.props.dateFormat,n.props.locale))),e=d(e,1)}return a})),ue(ve(n),"onSelectChange",(function(e){n.onChange(e.target.value)})),ue(ve(n),"renderSelectMode",(function(){return t.createElement("select",{value:P(Ne(n.props.date)),className:"react-datepicker__month-year-select",onChange:n.onSelectChange},n.renderSelectOptions())})),ue(ve(n),"renderReadView",(function(e){var r=Oe(n.props.date,n.props.dateFormat,n.props.locale);return t.createElement("div",{key:"read",style:{visibility:e?"visible":"hidden"},className:"react-datepicker__month-year-read-view",onClick:function(e){return n.toggleDropdown(e)}},t.createElement("span",{className:"react-datepicker__month-year-read-view--down-arrow"}),t.createElement("span",{className:"react-datepicker__month-year-read-view--selected-month-year"},r))})),ue(ve(n),"renderDropdown",(function(){return t.createElement(ct,{key:"dropdown",ref:"options",date:n.props.date,dateFormat:n.props.dateFormat,onChange:n.onChange,onCancel:n.toggleDropdown,minDate:n.props.minDate,maxDate:n.props.maxDate,scrollableMonthYearDropdown:n.props.scrollableMonthYearDropdown})})),ue(ve(n),"renderScrollMode",(function(){var e=n.state.dropdownVisible,t=[n.renderReadView(!e)];return e&&t.unshift(n.renderDropdown()),t})),ue(ve(n),"onChange",(function(e){n.toggleDropdown();var t=_e(parseInt(e));xe(n.props.date,t)&&Te(n.props.date,t)||n.props.onChange(t)})),ue(ve(n),"toggleDropdown",(function(){return n.setState({dropdownVisible:!n.state.dropdownVisible})})),n}return me(r,e),de(r,[{key:"render",value:function(){var e;switch(this.props.dropdownMode){case"scroll":e=this.renderScrollMode();break;case"select":e=this.renderSelectMode()}return t.createElement("div",{className:"react-datepicker__month-year-dropdown-container react-datepicker__month-year-dropdown-container--".concat(this.props.dropdownMode)},e)}}]),r}(t.Component),dt=function(e){function r(){var e,a;ce(this,r);for(var o=arguments.length,s=new Array(o),i=0;i<o;i++)s[i]=arguments[i];return ue(ve(a=we(this,(e=ye(r)).call.apply(e,[this].concat(s)))),"dayEl",t.createRef()),ue(ve(a),"handleClick",(function(e){!a.isDisabled()&&a.props.onClick&&a.props.onClick(e)})),ue(ve(a),"handleMouseEnter",(function(e){!a.isDisabled()&&a.props.onMouseEnter&&a.props.onMouseEnter(e)})),ue(ve(a),"handleOnKeyDown",(function(e){" "===e.key&&(e.preventDefault(),e.key="Enter"),a.props.handleOnKeyDown(e)})),ue(ve(a),"isSameDay",(function(e){return Ie(a.props.day,e)})),ue(ve(a),"isKeyboardSelected",(function(){return!a.props.disabledKeyboardNavigation&&!a.props.inline&&!a.isSameDay(a.props.selected)&&a.isSameDay(a.props.preSelection)})),ue(ve(a),"isDisabled",(function(){return Be(a.props.day,a.props)})),ue(ve(a),"isExcluded",(function(){return function(e){var t=(arguments.length>1&&void 0!==arguments[1]?arguments[1]:{}).excludeDates;return t&&t.some((function(t){return Ie(e,t)}))||!1}(a.props.day,a.props)})),ue(ve(a),"getHighLightedClass",(function(e){var t=a.props,r=t.day,n=t.highlightDates;if(!n)return!1;var o=Oe(r,"MM.dd.yyyy");return n.get(o)})),ue(ve(a),"isInRange",(function(){var e=a.props,t=e.day,r=e.startDate,n=e.endDate;return!(!r||!n)&&qe(t,r,n)})),ue(ve(a),"isInSelectingRange",(function(){var e=a.props,t=e.day,r=e.selectsStart,n=e.selectsEnd,o=e.selectingDate,s=e.startDate,i=e.endDate;return!(!r&&!n||!o||a.isDisabled())&&(r&&i&&(te(o,i)||Le(o,i))?qe(t,o,i):!(!n||!s||!ee(o,s)&&!Le(o,s))&&qe(t,s,o))})),ue(ve(a),"isSelectingRangeStart",(function(){if(!a.isInSelectingRange())return!1;var e=a.props,t=e.day,r=e.selectingDate,n=e.startDate;return Ie(t,e.selectsStart?r:n)})),ue(ve(a),"isSelectingRangeEnd",(function(){if(!a.isInSelectingRange())return!1;var e=a.props,t=e.day,r=e.selectingDate,n=e.endDate;return Ie(t,e.selectsEnd?r:n)})),ue(ve(a),"isRangeStart",(function(){var e=a.props,t=e.day,r=e.startDate,n=e.endDate;return!(!r||!n)&&Ie(r,t)})),ue(ve(a),"isRangeEnd",(function(){var e=a.props,t=e.day,r=e.startDate,n=e.endDate;return!(!r||!n)&&Ie(n,t)})),ue(ve(a),"isWeekend",(function(){var e=b(a.props.day);return 0===e||6===e})),ue(ve(a),"isOutsideMonth",(function(){return void 0!==a.props.month&&a.props.month!==S(a.props.day)})),ue(ve(a),"getClassNames",(function(e){var t,r=a.props.dayClassName?a.props.dayClassName(e):void 0;return n("react-datepicker__day",r,"react-datepicker__day--"+Oe(a.props.day,"ddd",t),{"react-datepicker__day--disabled":a.isDisabled(),"react-datepicker__day--excluded":a.isExcluded(),"react-datepicker__day--selected":a.isSameDay(a.props.selected),"react-datepicker__day--keyboard-selected":a.isKeyboardSelected(),"react-datepicker__day--range-start":a.isRangeStart(),"react-datepicker__day--range-end":a.isRangeEnd(),"react-datepicker__day--in-range":a.isInRange(),"react-datepicker__day--in-selecting-range":a.isInSelectingRange(),"react-datepicker__day--selecting-range-start":a.isSelectingRangeStart(),"react-datepicker__day--selecting-range-end":a.isSelectingRangeEnd(),"react-datepicker__day--today":a.isSameDay(_e()),"react-datepicker__day--weekend":a.isWeekend(),"react-datepicker__day--outside-month":a.isOutsideMonth()},a.getHighLightedClass("react-datepicker__day--highlighted"))})),ue(ve(a),"getAriaLabel",(function(){var e=a.props,t=e.day,r=e.ariaLabelPrefixWhenEnabled,n=void 0===r?"Choose":r,o=e.ariaLabelPrefixWhenDisabled,s=void 0===o?"Not available":o,i=a.isDisabled()||a.isExcluded()?s:n;return"".concat(i," ").concat(Oe(t,"PPPP"))})),ue(ve(a),"getTabIndex",(function(e,t){var r=e||a.props.selected,n=t||a.props.preSelection;return a.isKeyboardSelected()||a.isSameDay(r)&&Ie(n,r)?0:-1})),ue(ve(a),"render",(function(){return t.createElement("div",{ref:a.dayEl,className:a.getClassNames(a.props.day),onKeyDown:a.handleOnKeyDown,onClick:a.handleClick,onMouseEnter:a.handleMouseEnter,tabIndex:a.getTabIndex(),"aria-label":a.getAriaLabel(),role:"option","aria-disabled":a.isDisabled()},a.props.renderDayContents?a.props.renderDayContents(C(a.props.day),a.props.day):C(a.props.day))})),a}return me(r,e),de(r,[{key:"componentDidMount",value:function(){0===this.getTabIndex()&&this.isSameDay(this.props.preSelection)&&(!document.activeElement||document.activeElement===document.body)&&this.dayEl.current.focus()}},{key:"componentDidUpdate",value:function(e){0===this.getTabIndex()&&this.isSameDay(this.props.preSelection)!==this.isSameDay(e.preSelection)&&!e.isInputFocused&&this.dayEl.current.focus()}}]),r}(t.Component),ut=function(e){function r(){var e,t;ce(this,r);for(var n=arguments.length,a=new Array(n),o=0;o<n;o++)a[o]=arguments[o];return ue(ve(t=we(this,(e=ye(r)).call.apply(e,[this].concat(a)))),"handleClick",(function(e){t.props.onClick&&t.props.onClick(e)})),t}return me(r,e),de(r,[{key:"render",value:function(){var e=this.props,r=e.weekNumber,a=e.ariaLabelPrefix,o=void 0===a?"week ":a,s={"react-datepicker__week-number":!0,"react-datepicker__week-number--clickable":!!e.onClick};return t.createElement("div",{className:n(s),"aria-label":"".concat(o," ").concat(this.props.weekNumber),onClick:this.handleClick},r)}}]),r}(t.Component),ht=function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"handleDayClick",(function(e,t){n.props.onDayClick&&n.props.onDayClick(e,t)})),ue(ve(n),"handleDayMouseEnter",(function(e){n.props.onDayMouseEnter&&n.props.onDayMouseEnter(e)})),ue(ve(n),"handleWeekClick",(function(e,t,r){"function"==typeof n.props.onWeekSelect&&n.props.onWeekSelect(e,t,r),n.props.shouldCloseOnSelect&&n.props.setOpen(!1)})),ue(ve(n),"formatWeekNumber",(function(e){return n.props.formatWeekNumber?n.props.formatWeekNumber(e):function(e,t){var r=t&&We(t)||Fe()&&We(Fe());return _(e,r?{locale:r}:null)}(e,n.props.locale)})),ue(ve(n),"renderDays",(function(){var e=Ee(n.props.day,n.props.locale),r=[],a=n.formatWeekNumber(e);if(n.props.showWeekNumber){var o=n.props.onWeekSelect?n.handleWeekClick.bind(ve(n),e,a):void 0;r.push(t.createElement(ut,{key:"W",weekNumber:a,onClick:o,ariaLabelPrefix:n.props.ariaLabelPrefix}))}return r.concat([0,1,2,3,4,5,6].map((function(r){var a=c(e,r);return t.createElement(dt,{ariaLabelPrefixWhenEnabled:n.props.chooseDayAriaLabelPrefix,ariaLabelPrefixWhenDisabled:n.props.disabledDayAriaLabelPrefix,key:a.valueOf(),day:a,month:n.props.month,onClick:n.handleDayClick.bind(ve(n),a),onMouseEnter:n.handleDayMouseEnter.bind(ve(n),a),minDate:n.props.minDate,maxDate:n.props.maxDate,excludeDates:n.props.excludeDates,includeDates:n.props.includeDates,inline:n.props.inline,highlightDates:n.props.highlightDates,selectingDate:n.props.selectingDate,filterDate:n.props.filterDate,preSelection:n.props.preSelection,selected:n.props.selected,selectsStart:n.props.selectsStart,selectsEnd:n.props.selectsEnd,startDate:n.props.startDate,endDate:n.props.endDate,dayClassName:n.props.dayClassName,renderDayContents:n.props.renderDayContents,disabledKeyboardNavigation:n.props.disabledKeyboardNavigation,handleOnKeyDown:n.props.handleOnKeyDown,isInputFocused:n.props.isInputFocused})})))})),n}return me(r,e),de(r,[{key:"render",value:function(){return t.createElement("div",{className:"react-datepicker__week"},this.renderDays())}}],[{key:"defaultProps",get:function(){return{shouldCloseOnSelect:!0}}}]),r}(t.Component),ft=6,mt=function(e){function r(){var e,a;ce(this,r);for(var o=arguments.length,s=new Array(o),i=0;i<o;i++)s[i]=arguments[i];return ue(ve(a=we(this,(e=ye(r)).call.apply(e,[this].concat(s)))),"handleDayClick",(function(e,t){a.props.onDayClick&&a.props.onDayClick(e,t,a.props.orderInDisplay)})),ue(ve(a),"handleDayMouseEnter",(function(e){a.props.onDayMouseEnter&&a.props.onDayMouseEnter(e)})),ue(ve(a),"handleMouseLeave",(function(){a.props.onMouseLeave&&a.props.onMouseLeave()})),ue(ve(a),"isRangeStartMonth",(function(e){var t=a.props,r=t.day,n=t.startDate,o=t.endDate;return!(!n||!o)&&Te(T(r,e),n)})),ue(ve(a),"isRangeStartQuarter",(function(e){var t=a.props,r=t.day,n=t.startDate,o=t.endDate;return!(!n||!o)&&Ye(Y(r,e),n)})),ue(ve(a),"isRangeEndMonth",(function(e){var t=a.props,r=t.day,n=t.startDate,o=t.endDate;return!(!n||!o)&&Te(T(r,e),o)})),ue(ve(a),"isRangeEndQuarter",(function(e){var t=a.props,r=t.day,n=t.startDate,o=t.endDate;return!(!n||!o)&&Ye(Y(r,e),o)})),ue(ve(a),"isWeekInMonth",(function(e){var t=a.props.day,r=c(e,6);return Te(e,t)||Te(r,t)})),ue(ve(a),"renderWeeks",(function(){for(var e=[],r=a.props.fixedHeight,n=Ee(Ne(a.props.day),a.props.locale),o=0,s=!1;e.push(t.createElement(ht,{ariaLabelPrefix:a.props.weekAriaLabelPrefix,chooseDayAriaLabelPrefix:a.props.chooseDayAriaLabelPrefix,disabledDayAriaLabelPrefix:a.props.disabledDayAriaLabelPrefix,key:o,day:n,month:S(a.props.day),onDayClick:a.handleDayClick,onDayMouseEnter:a.handleDayMouseEnter,onWeekSelect:a.props.onWeekSelect,formatWeekNumber:a.props.formatWeekNumber,locale:a.props.locale,minDate:a.props.minDate,maxDate:a.props.maxDate,excludeDates:a.props.excludeDates,includeDates:a.props.includeDates,inline:a.props.inline,highlightDates:a.props.highlightDates,selectingDate:a.props.selectingDate,filterDate:a.props.filterDate,preSelection:a.props.preSelection,selected:a.props.selected,selectsStart:a.props.selectsStart,selectsEnd:a.props.selectsEnd,showWeekNumber:a.props.showWeekNumbers,startDate:a.props.startDate,endDate:a.props.endDate,dayClassName:a.props.dayClassName,setOpen:a.props.setOpen,shouldCloseOnSelect:a.props.shouldCloseOnSelect,disabledKeyboardNavigation:a.props.disabledKeyboardNavigation,renderDayContents:a.props.renderDayContents,handleOnKeyDown:a.props.handleOnKeyDown,isInputFocused:a.props.isInputFocused})),!s;){o++,n=l(n,1);var i=r&&o>=ft,p=!r&&!a.isWeekInMonth(n);if(i||p){if(!a.props.peekNextMonth)break;s=!0}}return e})),ue(ve(a),"onMonthClick",(function(e,t){a.handleDayClick(Ne(T(a.props.day,t)),e)})),ue(ve(a),"onQuarterClick",(function(e,t){var r;a.handleDayClick((r=Y(a.props.day,t),K(r)),e)})),ue(ve(a),"getMonthClassNames",(function(e){var t=a.props,r=t.day,o=t.startDate,s=t.endDate,i=t.selected,p=t.minDate,c=t.maxDate;return n("react-datepicker__month-text","react-datepicker__month-".concat(e),{"react-datepicker__month--disabled":(p||c)&&Re(T(r,e),a.props),"react-datepicker__month--selected":S(r)===e&&O(r)===O(i),"react-datepicker__month--in-range":je(o,s,e,r),"react-datepicker__month--range-start":a.isRangeStartMonth(e),"react-datepicker__month--range-end":a.isRangeEndMonth(e)})})),ue(ve(a),"getQuarterClassNames",(function(e){var t=a.props,r=t.day,o=t.startDate,s=t.endDate,i=t.selected,p=t.minDate,c=t.maxDate;return n("react-datepicker__quarter-text","react-datepicker__quarter-".concat(e),{"react-datepicker__quarter--disabled":(p||c)&&He(Y(r,e),a.props),"react-datepicker__quarter--selected":M(r)===e&&O(r)===O(i),"react-datepicker__quarter--in-range":Ke(o,s,e,r),"react-datepicker__quarter--range-start":a.isRangeStartQuarter(e),"react-datepicker__quarter--range-end":a.isRangeEndQuarter(e)})})),ue(ve(a),"renderMonths",(function(){return[[0,1,2],[3,4,5],[6,7,8],[9,10,11]].map((function(e,r){return t.createElement("div",{className:"react-datepicker__month-wrapper",key:r},e.map((function(e,r){return t.createElement("div",{key:r,onClick:function(t){a.onMonthClick(t,e)},className:a.getMonthClassNames(e)},Ae(e,a.props.locale))})))}))})),ue(ve(a),"renderQuarters",(function(){return t.createElement("div",{className:"react-datepicker__quarter-wrapper"},[1,2,3,4].map((function(e,r){return t.createElement("div",{key:r,onClick:function(t){a.onQuarterClick(t,e)},className:a.getQuarterClassNames(e)},(n=e,o=a.props.locale,Oe(Y(_e(),n),"QQQ",o)));var n,o})))})),ue(ve(a),"getClassNames",(function(){var e=a.props,t=e.selectingDate,r=e.selectsStart,o=e.selectsEnd,s=e.showMonthYearPicker,i=e.showQuarterYearPicker;return n("react-datepicker__month",{"react-datepicker__month--selecting-range":t&&(r||o)},{"react-datepicker__monthPicker":s},{"react-datepicker__quarterPicker":i})})),a}return me(r,e),de(r,[{key:"render",value:function(){var e=this.props,r=e.showMonthYearPicker,n=e.showQuarterYearPicker,a=e.day,o=e.ariaLabelPrefix,s=void 0===o?"month ":o;return t.createElement("div",{className:this.getClassNames(),onMouseLeave:this.handleMouseLeave,role:"listbox","aria-label":"".concat(s," ").concat(Oe(a,"yyyy-MM"))},r?this.renderMonths():n?this.renderQuarters():this.renderWeeks())}}]),r}(t.Component),yt=function(e){function r(){var e,n;ce(this,r);for(var a=arguments.length,o=new Array(a),s=0;s<a;s++)o[s]=arguments[s];return ue(ve(n=we(this,(e=ye(r)).call.apply(e,[this].concat(o)))),"state",{height:null}),ue(ve(n),"handleClick",(function(e){(n.props.minTime||n.props.maxTime)&&Ue(e,n.props)||n.props.excludeTimes&&Ve(e,n.props.excludeTimes)||n.props.includeTimes&&!Ve(e,n.props.includeTimes)||n.props.onChange(e)})),ue(ve(n),"liClasses",(function(e,t,r){var a=["react-datepicker__time-list-item",n.props.timeClassName?n.props.timeClassName(e,t,r):void 0];return n.props.selected&&t===k(e)&&r===g(e)&&a.push("react-datepicker__time-list-item--selected"),((n.props.minTime||n.props.maxTime)&&Ue(e,n.props)||n.props.excludeTimes&&Ve(e,n.props.excludeTimes)||n.props.includeTimes&&!Ve(e,n.props.includeTimes))&&a.push("react-datepicker__time-list-item--disabled"),n.props.injectTimes&&(60*k(e)+g(e))%n.props.intervals!=0&&a.push("react-datepicker__time-list-item--injected"),a.join(" ")})),ue(ve(n),"renderTimes",(function(){for(var e,r=[],a=n.props.format?n.props.format:"p",o=n.props.intervals,s=n.props.selected||n.props.openToDate||_e(),p=k(s),c=g(s),l=(e=_e(),R(e)),d=1440/o,u=n.props.injectTimes&&n.props.injectTimes.sort((function(e,t){return e-t})),h=0;h<d;h++){var f=i(l,h*o);if(r.push(f),u){var m=tt(l,f,h,o,u);r=r.concat(m)}}return r.map((function(e,r){return t.createElement("li",{key:r,onClick:n.handleClick.bind(ve(n),e),className:n.liClasses(e,p,c),ref:function(t){p===k(e)&&c>=g(e)&&(n.centerLi=t)}},Oe(e,a,n.props.locale))}))})),n}return me(r,e),de(r,[{key:"componentDidMount",value:function(){this.list.scrollTop=r.calcCenterPosition(this.props.monthRef?this.props.monthRef.clientHeight-this.header.clientHeight:this.list.clientHeight,this.centerLi),this.props.monthRef&&this.header&&this.setState({height:this.props.monthRef.clientHeight-this.header.clientHeight})}},{key:"render",value:function(){var e=this,r=this.state.height;return t.createElement("div",{className:"react-datepicker__time-container ".concat(this.props.todayButton?"react-datepicker__time-container--with-today-button":"")},t.createElement("div",{className:"react-datepicker__header react-datepicker__header--time",ref:function(t){e.header=t}},t.createElement("div",{className:"react-datepicker-time__header"},this.props.timeCaption)),t.createElement("div",{className:"react-datepicker__time"},t.createElement("div",{className:"react-datepicker__time-box"},t.createElement("ul",{className:"react-datepicker__time-list",ref:function(t){e.list=t},style:r?{height:r}:{}},this.renderTimes()))))}}],[{key:"defaultProps",get:function(){return{intervals:30,onTimeChange:function(){},todayButton:null,timeCaption:"Time"}}}]),r}(t.Component);ue(yt,"calcCenterPosition",(function(e,t){return t.offsetTop-(e/2-t.clientHeight/2)}));var Dt=function(e){function r(e){var n;return ce(this,r),ue(ve(n=we(this,ye(r).call(this,e))),"onTimeChange",(function(e){n.setState({time:e});var t=new Date;t.setHours(e.split(":")[0]),t.setMinutes(e.split(":")[1]),n.props.onChange(t)})),ue(ve(n),"renderTimeInput",(function(){var e=n.state.time,r=n.props,a=r.timeString,o=r.customTimeInput;return o?t.cloneElement(o,{value:e,onChange:n.onTimeChange}):t.createElement("input",{type:"time",className:"react-datepicker-time__input",placeholder:"Time",name:"time-input",required:!0,value:e,onChange:function(e){n.onTimeChange(e.target.value||a)}})})),n.state={time:n.props.timeString},n}return me(r,e),de(r,[{key:"render",value:function(){return t.createElement("div",{className:"react-datepicker__input-time-container"},t.createElement("div",{className:"react-datepicker-time__caption"},this.props.timeInputLabel),t.createElement("div",{className:"react-datepicker-time__input-container"},t.createElement("div",{className:"react-datepicker-time__input"},this.renderTimeInput())))}}]),r}(t.Component);function vt(e){var r=e.className,n=e.children,a=e.showPopperArrow,o=e.arrowProps,s=void 0===o?{}:o;return t.createElement("div",{className:r},a&&t.createElement("div",he({className:"react-datepicker__triangle"},s)),n)}var wt=["react-datepicker__year-select","react-datepicker__month-select","react-datepicker__month-year-select"],gt=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=(e.className||"").split(/\s+/);return wt.some((function(e){return t.indexOf(e)>=0}))},kt=function(e){function r(e){var n;return ce(this,r),ue(ve(n=we(this,ye(r).call(this,e))),"handleClickOutside",(function(e){n.props.onClickOutside(e)})),ue(ve(n),"setClickOutsideRef",(function(){return n.containerRef.current})),ue(ve(n),"handleDropdownFocus",(function(e){gt(e.target)&&n.props.onDropdownFocus()})),ue(ve(n),"getDateInView",(function(){var e=n.props,t=e.preSelection,r=e.selected,a=e.openToDate,o=Xe(n.props),s=Ze(n.props),i=_e(),p=a||r||t;return p||(o&&te(i,o)?o:s&&ee(i,s)?s:i)})),ue(ve(n),"increaseMonth",(function(){n.setState((function(e){var t=e.date;return{date:d(t,1)}}),(function(){return n.handleMonthChange(n.state.date)}))})),ue(ve(n),"decreaseMonth",(function(){n.setState((function(e){var t=e.date;return{date:D(t,1)}}),(function(){return n.handleMonthChange(n.state.date)}))})),ue(ve(n),"handleDayClick",(function(e,t,r){return n.props.onSelect(e,t,r)})),ue(ve(n),"handleDayMouseEnter",(function(e){n.setState({selectingDate:e}),n.props.onDayMouseEnter&&n.props.onDayMouseEnter(e)})),ue(ve(n),"handleMonthMouseLeave",(function(){n.setState({selectingDate:null}),n.props.onMonthMouseLeave&&n.props.onMonthMouseLeave()})),ue(ve(n),"handleYearChange",(function(e){n.props.onYearChange&&n.props.onYearChange(e)})),ue(ve(n),"handleMonthChange",(function(e){n.props.onMonthChange&&n.props.onMonthChange(e),n.props.adjustDateOnChange&&(n.props.onSelect&&n.props.onSelect(e),n.props.setOpen&&n.props.setOpen(!0))})),ue(ve(n),"handleMonthYearChange",(function(e){n.handleYearChange(e),n.handleMonthChange(e)})),ue(ve(n),"changeYear",(function(e){n.setState((function(t){var r=t.date;return{date:I(r,e)}}),(function(){return n.handleYearChange(n.state.date)}))})),ue(ve(n),"changeMonth",(function(e){n.setState((function(t){var r=t.date;return{date:T(r,e)}}),(function(){return n.handleMonthChange(n.state.date)}))})),ue(ve(n),"changeMonthYear",(function(e){n.setState((function(t){var r=t.date;return{date:I(T(r,S(e)),O(e))}}),(function(){return n.handleMonthYearChange(n.state.date)}))})),ue(ve(n),"header",(function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:n.state.date,r=Ee(e,n.props.locale),a=[];return n.props.showWeekNumbers&&a.push(t.createElement("div",{key:"W",className:"react-datepicker__day-name"},n.props.weekLabel||"#")),a.concat([0,1,2,3,4,5,6].map((function(e){var a=c(r,e),o=n.formatWeekday(a,n.props.locale);return t.createElement("div",{key:e,className:"react-datepicker__day-name"},o)})))})),ue(ve(n),"formatWeekday",(function(e,t){return n.props.formatWeekDay?function(e,t,r){return t(Oe(e,"EEEE",r))}(e,n.props.formatWeekDay,t):n.props.useWeekdaysShort?function(e,t){return Oe(e,"EEE",t)}(e,t):function(e,t){return Oe(e,"EEEEEE",t)}(e,t)})),ue(ve(n),"decreaseYear",(function(){n.setState((function(e){var t=e.date;return{date:v(t,1)}}),(function(){return n.handleYearChange(n.state.date)}))})),ue(ve(n),"renderPreviousButton",(function(){if(!n.props.renderCustomHeader){var e=n.props.showMonthYearPicker?Ge(n.state.date,n.props):$e(n.state.date,n.props);if((n.props.forceShowMonthNavigation||n.props.showDisabledMonthNavigation||!e)&&!n.props.showTimeSelectOnly){var r=["react-datepicker__navigation","react-datepicker__navigation--previous"],a=n.decreaseMonth;(n.props.showMonthYearPicker||n.props.showQuarterYearPicker)&&(a=n.decreaseYear),e&&n.props.showDisabledMonthNavigation&&(r.push("react-datepicker__navigation--previous--disabled"),a=null);var o=n.props.showMonthYearPicker||n.props.showQuarterYearPicker,s=n.props,i=s.previousMonthAriaLabel,p=void 0===i?"Previous Month":i,c=s.previousYearAriaLabel,l=void 0===c?"Previous Year":c;return t.createElement("button",{type:"button",className:r.join(" "),onClick:a,"aria-label":o?l:p},o?n.props.previousYearButtonLabel:n.props.previousMonthButtonLabel)}}})),ue(ve(n),"increaseYear",(function(){n.setState((function(e){var t=e.date;return{date:u(t,1)}}),(function(){return n.handleYearChange(n.state.date)}))})),ue(ve(n),"renderNextButton",(function(){if(!n.props.renderCustomHeader){var e=n.props.showMonthYearPicker?Je(n.state.date,n.props):ze(n.state.date,n.props);if((n.props.forceShowMonthNavigation||n.props.showDisabledMonthNavigation||!e)&&!n.props.showTimeSelectOnly){var r=["react-datepicker__navigation","react-datepicker__navigation--next"];n.props.showTimeSelect&&r.push("react-datepicker__navigation--next--with-time"),n.props.todayButton&&r.push("react-datepicker__navigation--next--with-today-button");var a=n.increaseMonth;(n.props.showMonthYearPicker||n.props.showQuarterYearPicker)&&(a=n.increaseYear),e&&n.props.showDisabledMonthNavigation&&(r.push("react-datepicker__navigation--next--disabled"),a=null);var o=n.props.showMonthYearPicker||n.props.showQuarterYearPicker,s=n.props,i=s.nextMonthAriaLabel,p=void 0===i?"Next Month":i,c=s.nextYearAriaLabel,l=void 0===c?"Next Year":c;return t.createElement("button",{type:"button",className:r.join(" "),onClick:a,"aria-label":o?l:p},o?n.props.nextYearButtonLabel:n.props.nextMonthButtonLabel)}}})),ue(ve(n),"renderCurrentMonth",(function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:n.state.date,r=["react-datepicker__current-month"];return n.props.showYearDropdown&&r.push("react-datepicker__current-month--hasYearDropdown"),n.props.showMonthDropdown&&r.push("react-datepicker__current-month--hasMonthDropdown"),n.props.showMonthYearDropdown&&r.push("react-datepicker__current-month--hasMonthYearDropdown"),t.createElement("div",{className:r.join(" ")},Oe(e,n.props.dateFormat,n.props.locale))})),ue(ve(n),"renderYearDropdown",(function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];if(n.props.showYearDropdown&&!e)return t.createElement(ot,{adjustDateOnChange:n.props.adjustDateOnChange,date:n.state.date,onSelect:n.props.onSelect,setOpen:n.props.setOpen,dropdownMode:n.props.dropdownMode,onChange:n.changeYear,minDate:n.props.minDate,maxDate:n.props.maxDate,year:O(n.state.date),scrollableYearDropdown:n.props.scrollableYearDropdown,yearDropdownItemNumber:n.props.yearDropdownItemNumber})})),ue(ve(n),"renderMonthDropdown",(function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];if(n.props.showMonthDropdown&&!e)return t.createElement(it,{dropdownMode:n.props.dropdownMode,locale:n.props.locale,onChange:n.changeMonth,month:S(n.state.date),useShortMonthInDropdown:n.props.useShortMonthInDropdown})})),ue(ve(n),"renderMonthYearDropdown",(function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];if(n.props.showMonthYearDropdown&&!e)return t.createElement(lt,{dropdownMode:n.props.dropdownMode,locale:n.props.locale,dateFormat:n.props.dateFormat,onChange:n.changeMonthYear,minDate:n.props.minDate,maxDate:n.props.maxDate,date:n.state.date,scrollableMonthYearDropdown:n.props.scrollableMonthYearDropdown})})),ue(ve(n),"renderTodayButton",(function(){if(n.props.todayButton&&!n.props.showTimeSelectOnly)return t.createElement("div",{className:"react-datepicker__today-button",onClick:function(e){return n.props.onSelect(R(_e()),e)}},n.props.todayButton)})),ue(ve(n),"renderDefaultHeader",(function(e){var r=e.monthDate,a=e.i;return t.createElement("div",{className:"react-datepicker__header"},n.renderCurrentMonth(r),t.createElement("div",{className:"react-datepicker__header__dropdown react-datepicker__header__dropdown--".concat(n.props.dropdownMode),onFocus:n.handleDropdownFocus},n.renderMonthDropdown(0!==a),n.renderMonthYearDropdown(0!==a),n.renderYearDropdown(0!==a)),t.createElement("div",{className:"react-datepicker__day-names"},n.header(r)))})),ue(ve(n),"renderCustomHeader",(function(e){var r=e.monthDate;if(0!==e.i)return null;var a=$e(n.state.date,n.props),o=ze(n.state.date,n.props),s=Ge(n.state.date,n.props),i=Je(n.state.date,n.props);return t.createElement("div",{className:"react-datepicker__header react-datepicker__header--custom",onFocus:n.props.onDropdownFocus},n.props.renderCustomHeader(function(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{};t%2?fe(Object(r),!0).forEach((function(t){ue(e,t,r[t])})):Object.getOwnPropertyDescriptors?Object.defineProperties(e,Object.getOwnPropertyDescriptors(r)):fe(Object(r)).forEach((function(t){Object.defineProperty(e,t,Object.getOwnPropertyDescriptor(r,t))}))}return e}({},n.state,{changeMonth:n.changeMonth,changeYear:n.changeYear,decreaseMonth:n.decreaseMonth,increaseMonth:n.increaseMonth,decreaseYear:n.decreaseYear,increaseYear:n.increaseYear,prevMonthButtonDisabled:a,nextMonthButtonDisabled:o,prevYearButtonDisabled:s,nextYearButtonDisabled:i})),t.createElement("div",{className:"react-datepicker__day-names"},n.header(r)))})),ue(ve(n),"renderYearHeader",(function(){return t.createElement("div",{className:"react-datepicker__header react-datepicker-year-header"},O(n.state.date))})),ue(ve(n),"renderHeader",(function(e){switch(!0){case void 0!==n.props.renderCustomHeader:return n.renderCustomHeader(e);case n.props.showMonthYearPicker||n.props.showQuarterYearPicker:return n.renderYearHeader(e);default:return n.renderDefaultHeader(e)}})),ue(ve(n),"renderMonths",(function(){if(!n.props.showTimeSelectOnly){for(var e=[],r=n.props.showPreviousMonths?n.props.monthsShown-1:0,a=D(n.state.date,r),o=0;o<n.props.monthsShown;++o){var s=o-n.props.monthSelectedIn,i=d(a,s),p="month-".concat(o);e.push(t.createElement("div",{key:p,ref:function(e){n.monthContainer=e},className:"react-datepicker__month-container"},n.renderHeader({monthDate:i,i:o}),t.createElement(mt,{chooseDayAriaLabelPrefix:n.props.chooseDayAriaLabelPrefix,disabledDayAriaLabelPrefix:n.props.disabledDayAriaLabelPrefix,weekAriaLabelPrefix:n.props.weekAriaLabelPrefix,onChange:n.changeMonthYear,day:i,dayClassName:n.props.dayClassName,monthClassName:n.props.monthClassName,onDayClick:n.handleDayClick,handleOnKeyDown:n.props.handleOnKeyDown,onDayMouseEnter:n.handleDayMouseEnter,onMouseLeave:n.handleMonthMouseLeave,onWeekSelect:n.props.onWeekSelect,orderInDisplay:o,formatWeekNumber:n.props.formatWeekNumber,locale:n.props.locale,minDate:n.props.minDate,maxDate:n.props.maxDate,excludeDates:n.props.excludeDates,highlightDates:n.props.highlightDates,selectingDate:n.state.selectingDate,includeDates:n.props.includeDates,inline:n.props.inline,fixedHeight:n.props.fixedHeight,filterDate:n.props.filterDate,preSelection:n.props.preSelection,selected:n.props.selected,selectsStart:n.props.selectsStart,selectsEnd:n.props.selectsEnd,showWeekNumbers:n.props.showWeekNumbers,startDate:n.props.startDate,endDate:n.props.endDate,peekNextMonth:n.props.peekNextMonth,setOpen:n.props.setOpen,shouldCloseOnSelect:n.props.shouldCloseOnSelect,renderDayContents:n.props.renderDayContents,disabledKeyboardNavigation:n.props.disabledKeyboardNavigation,showMonthYearPicker:n.props.showMonthYearPicker,showQuarterYearPicker:n.props.showQuarterYearPicker,isInputFocused:n.props.isInputFocused})))}return e}})),ue(ve(n),"renderTimeSection",(function(){if(n.props.showTimeSelect&&(n.state.monthContainer||n.props.showTimeSelectOnly))return t.createElement(yt,{selected:n.props.selected,openToDate:n.props.openToDate,onChange:n.props.onTimeChange,timeClassName:n.props.timeClassName,format:n.props.timeFormat,includeTimes:n.props.includeTimes,intervals:n.props.timeIntervals,minTime:n.props.minTime,maxTime:n.props.maxTime,excludeTimes:n.props.excludeTimes,timeCaption:n.props.timeCaption,todayButton:n.props.todayButton,showMonthDropdown:n.props.showMonthDropdown,showMonthYearDropdown:n.props.showMonthYearDropdown,showYearDropdown:n.props.showYearDropdown,withPortal:n.props.withPortal,monthRef:n.state.monthContainer,injectTimes:n.props.injectTimes,locale:n.props.locale})})),ue(ve(n),"renderInputTimeSection",(function(){var e=new Date(n.props.selected),r="".concat(rt(e.getHours()),":").concat(rt(e.getMinutes()));if(n.props.showTimeInput)return t.createElement(Dt,{timeString:r,timeInputLabel:n.props.timeInputLabel,onChange:n.props.onTimeChange,customTimeInput:n.props.customTimeInput})})),n.containerRef=t.createRef(),n.state={date:n.getDateInView(),selectingDate:null,monthContainer:null},n}return me(r,e),de(r,null,[{key:"defaultProps",get:function(){return{onDropdownFocus:function(){},monthsShown:1,monthSelectedIn:0,forceShowMonthNavigation:!1,timeCaption:"Time",previousYearButtonLabel:"Previous Year",nextYearButtonLabel:"Next Year",previousMonthButtonLabel:"Previous Month",nextMonthButtonLabel:"Next Month",customTimeInput:null}}}]),de(r,[{key:"componentDidMount",value:function(){var e=this;this.props.showTimeSelect&&(this.assignMonthContainer=void e.setState({monthContainer:e.monthContainer}))}},{key:"componentDidUpdate",value:function(e){this.props.preSelection&&!Ie(this.props.preSelection,e.preSelection)?this.setState({date:this.props.preSelection}):this.props.openToDate&&!Ie(this.props.openToDate,e.openToDate)&&this.setState({date:this.props.openToDate})}},{key:"render",value:function(){var e=this.props.container||vt;return t.createElement("div",{ref:this.containerRef},t.createElement(e,{className:n("react-datepicker",this.props.className,{"react-datepicker--time-only":this.props.showTimeSelectOnly}),showPopperArrow:this.props.showPopperArrow},this.renderPreviousButton(),this.renderNextButton(),this.renderMonths(),this.renderTodayButton(),this.renderTimeSection(),this.renderInputTimeSection(),this.props.children))}}]),r}(t.Component),bt="[tabindex], a, button, input, select, textarea",Ct=function(e){return!e.disabled&&-1!==e.tabIndex},_t=function(e){function r(e){var n;return ce(this,r),ue(ve(n=we(this,ye(r).call(this,e))),"getTabChildren",(function(){return Array.prototype.slice.call(n.tabLoopRef.current.querySelectorAll(bt),1,-1).filter(Ct)})),ue(ve(n),"handleFocusStart",(function(e){var t=n.getTabChildren();t&&t.length>1&&t[t.length-1].focus()})),ue(ve(n),"handleFocusEnd",(function(e){var t=n.getTabChildren();t&&t.length>1&&t[0].focus()})),n.tabLoopRef=t.createRef(),n}return me(r,e),de(r,null,[{key:"defaultProps",get:function(){return{enableTabLoop:!0}}}]),de(r,[{key:"render",value:function(){return this.props.enableTabLoop?t.createElement("div",{className:"react-datepicker__tab-loop",ref:this.tabLoopRef},t.createElement("div",{className:"react-datepicker__tab-loop__start",tabIndex:"0",onFocus:this.handleFocusStart}),this.props.children,t.createElement("div",{className:"react-datepicker__tab-loop__end",tabIndex:"0",onFocus:this.handleFocusEnd})):this.props.children}}]),r}(t.Component),St=function(e){function r(){return ce(this,r),we(this,ye(r).apply(this,arguments))}return me(r,e),de(r,[{key:"render",value:function(){var e,r=this.props,a=r.className,o=r.wrapperClassName,s=r.hidePopper,i=r.popperComponent,p=r.popperModifiers,c=r.popperPlacement,l=r.popperProps,d=r.targetComponent,u=r.enableTabLoop,h=r.popperOnKeyDown;if(!s){var f=n("react-datepicker-popper",a);e=t.createElement(ie.Popper,he({modifiers:p,placement:c},l),(function(e){var r=e.ref,n=e.style,a=e.placement,o=e.arrowProps;return t.createElement(_t,{enableTabLoop:u},t.createElement("div",he({ref:r,style:n},{className:f,"data-placement":a,onKeyDown:h}),t.cloneElement(i,{arrowProps:o})))}))}this.props.popperContainer&&(e=t.createElement(this.props.popperContainer,{},e));var m=n("react-datepicker-wrapper",o);return t.createElement(ie.Manager,{className:"react-datepicker-manager"},t.createElement(ie.Reference,null,(function(e){var r=e.ref;return t.createElement("div",{ref:r,className:m},d)})),e)}}],[{key:"defaultProps",get:function(){return{hidePopper:!0,popperModifiers:{preventOverflow:{enabled:!0,escapeWithReference:!0,boundariesElement:"viewport"}},popperProps:{},popperPlacement:"bottom-start"}}}]),r}(t.Component),Mt="react-datepicker-ignore-onclickoutside",Ot=se(kt);var Pt="Date input not valid.",Et=function(e){function r(e){var o;return ce(this,r),ue(ve(o=we(this,ye(r).call(this,e))),"getPreSelection",(function(){return o.props.openToDate?o.props.openToDate:o.props.selectsEnd&&o.props.startDate?o.props.startDate:o.props.selectsStart&&o.props.endDate?o.props.endDate:_e()})),ue(ve(o),"calcInitialState",(function(){var e=o.getPreSelection(),t=Xe(o.props),r=Ze(o.props),n=t&&te(e,t)?t:r&&ee(e,r)?r:e;return{open:o.props.startOpen||!1,preventFocus:!1,preSelection:o.props.selected?o.props.selected:n,highlightDates:et(o.props.highlightDates),focused:!1}})),ue(ve(o),"clearPreventFocusTimeout",(function(){o.preventFocusTimeout&&clearTimeout(o.preventFocusTimeout)})),ue(ve(o),"setFocus",(function(){o.input&&o.input.focus&&o.input.focus()})),ue(ve(o),"setBlur",(function(){o.input&&o.input.blur&&o.input.blur(),o.cancelFocusInput()})),ue(ve(o),"setOpen",(function(e){var t=arguments.length>1&&void 0!==arguments[1]&&arguments[1];o.setState({open:e,preSelection:e&&o.state.open?o.state.preSelection:o.calcInitialState().preSelection,lastPreSelectChange:xt},(function(){e||o.setState((function(e){return{focused:!!t&&e.focused}}),(function(){!t&&o.setBlur(),o.setState({inputValue:null})}))}))})),ue(ve(o),"inputOk",(function(){return a(o.state.preSelection)})),ue(ve(o),"isCalendarOpen",(function(){return void 0===o.props.open?o.state.open&&!o.props.disabled&&!o.props.readOnly:o.props.open})),ue(ve(o),"handleFocus",(function(e){o.state.preventFocus||(o.props.onFocus(e),o.props.preventOpenOnFocus||o.props.readOnly||o.setOpen(!0)),o.setState({focused:!0})})),ue(ve(o),"cancelFocusInput",(function(){clearTimeout(o.inputFocusTimeout),o.inputFocusTimeout=null})),ue(ve(o),"deferFocusInput",(function(){o.cancelFocusInput(),o.inputFocusTimeout=setTimeout((function(){return o.setFocus()}),1)})),ue(ve(o),"handleDropdownFocus",(function(){o.cancelFocusInput()})),ue(ve(o),"handleBlur",(function(e){(!o.state.open||o.props.withPortal||o.props.showTimeInput)&&o.props.onBlur(e),o.setState({focused:!1})})),ue(ve(o),"handleCalendarClickOutside",(function(e){o.props.inline||o.setOpen(!1),o.props.onClickOutside(e),o.props.withPortal&&e.preventDefault()})),ue(ve(o),"handleChange",(function(){for(var e=arguments.length,t=new Array(e),r=0;r<e;r++)t[r]=arguments[r];var n=t[0];if(!o.props.onChangeRaw||(o.props.onChangeRaw.apply(ve(o),t),"function"==typeof n.isDefaultPrevented&&!n.isDefaultPrevented())){o.setState({inputValue:n.target.value,lastPreSelectChange:Nt});var a=Se(n.target.value,o.props.dateFormat,o.props.locale,o.props.strictParsing);!a&&n.target.value||o.setSelected(a,n,!0)}})),ue(ve(o),"handleSelect",(function(e,t,r){o.setState({preventFocus:!0},(function(){return o.preventFocusTimeout=setTimeout((function(){return o.setState({preventFocus:!1})}),50),o.preventFocusTimeout})),o.setSelected(e,t,void 0,r),!o.props.shouldCloseOnSelect||o.props.showTimeSelect?o.setPreSelection(e):o.props.inline||o.setOpen(!1)})),ue(ve(o),"setSelected",(function(e,t,r,n){var a=e;if(null===a||!Be(a,o.props)){if(!Le(o.props.selected,a)||o.props.allowSameDay){if(null!==a){if(o.props.selected){var s=o.props.selected;r&&(s=_e(a)),a=Pe(a,{hour:k(s),minute:g(s),second:w(s)})}o.props.inline||o.setState({preSelection:a}),o.props.inline&&o.props.monthsShown>1&&!o.props.inlineFocusSelectedMonth&&o.setState({monthSelectedIn:n})}o.props.onChange(a,t)}o.props.onSelect(a,t),r||o.setState({inputValue:null})}})),ue(ve(o),"setPreSelection",(function(e){var t=void 0!==o.props.minDate,r=void 0!==o.props.maxDate,n=!0;e&&(t&&r?n=qe(e,o.props.minDate,o.props.maxDate):t?n=ee(e,o.props.minDate):r&&(n=te(e,o.props.maxDate))),n&&o.setState({preSelection:e})})),ue(ve(o),"handleTimeChange",(function(e){var t=Pe(o.props.selected?o.props.selected:o.getPreSelection(),{hour:k(e),minute:g(e)});o.setState({preSelection:t}),o.props.onChange(t),o.props.shouldCloseOnSelect&&o.setOpen(!1),o.props.showTimeInput&&o.setOpen(!0),o.setState({inputValue:null})})),ue(ve(o),"onInputClick",(function(){o.props.disabled||o.props.readOnly||o.setOpen(!0),o.props.onInputClick()})),ue(ve(o),"onInputKeyDown",(function(e){o.props.onKeyDown(e);var t=e.key;if(o.state.open||o.props.inline||o.props.preventOpenOnFocus){if(o.state.open){if("ArrowDown"===t||"ArrowUp"===t){e.preventDefault();var r=o.calendar.componentNode&&o.calendar.componentNode.querySelector('.react-datepicker__day[tabindex="0"]');return void(r&&r.focus())}var n=_e(o.state.preSelection);"Enter"===t?(e.preventDefault(),o.inputOk()&&o.state.lastPreSelectChange===xt?(o.handleSelect(n,e),!o.props.shouldCloseOnSelect&&o.setPreSelection(n)):o.setOpen(!1)):"Escape"===t&&(e.preventDefault(),o.setOpen(!1)),o.inputOk()||o.props.onInputError({code:1,msg:Pt})}}else"ArrowDown"!==t&&"ArrowUp"!==t&&"Enter"!==t||o.onInputClick()})),ue(ve(o),"onDayKeyDown",(function(e){o.props.onKeyDown(e);var t=e.key,r=_e(o.state.preSelection);if("Enter"===t)e.preventDefault(),o.handleSelect(r,e),!o.props.shouldCloseOnSelect&&o.setPreSelection(r);else if("Escape"===t)e.preventDefault(),o.setOpen(!1),o.inputOk()||o.props.onInputError({code:1,msg:Pt});else if(!o.props.disabledKeyboardNavigation){var n;switch(t){case"ArrowLeft":n=m(r,1);break;case"ArrowRight":n=c(r,1);break;case"ArrowUp":n=y(r,1);break;case"ArrowDown":n=l(r,1);break;case"PageUp":n=D(r,1);break;case"PageDown":n=d(r,1);break;case"Home":n=v(r,1);break;case"End":n=u(r,1)}if(!n)return void(o.props.onInputError&&o.props.onInputError({code:1,msg:Pt}));e.preventDefault(),o.setState({lastPreSelectChange:xt}),o.props.adjustDateOnChange&&o.setSelected(n),o.setPreSelection(n)}})),ue(ve(o),"onPopperKeyDown",(function(e){"Escape"===e.key&&(e.preventDefault(),o.setState({preventFocus:!0},(function(){o.setOpen(!1),setTimeout(o.setFocus)})))})),ue(ve(o),"onClearClick",(function(e){e&&e.preventDefault&&e.preventDefault(),o.props.onChange(null,e),o.setState({inputValue:null})})),ue(ve(o),"clear",(function(){o.onClearClick()})),ue(ve(o),"renderCalendar",(function(){return o.props.inline||o.isCalendarOpen()?t.createElement(Ot,{ref:function(e){o.calendar=e},locale:o.props.locale,chooseDayAriaLabelPrefix:o.props.chooseDayAriaLabelPrefix,disabledDayAriaLabelPrefix:o.props.disabledDayAriaLabelPrefix,weekAriaLabelPrefix:o.props.weekAriaLabelPrefix,adjustDateOnChange:o.props.adjustDateOnChange,setOpen:o.setOpen,shouldCloseOnSelect:o.props.shouldCloseOnSelect,dateFormat:o.props.dateFormatCalendar,useWeekdaysShort:o.props.useWeekdaysShort,formatWeekDay:o.props.formatWeekDay,dropdownMode:o.props.dropdownMode,selected:o.props.selected,preSelection:o.state.preSelection,onSelect:o.handleSelect,onWeekSelect:o.props.onWeekSelect,openToDate:o.props.openToDate,minDate:o.props.minDate,maxDate:o.props.maxDate,selectsStart:o.props.selectsStart,selectsEnd:o.props.selectsEnd,startDate:o.props.startDate,endDate:o.props.endDate,excludeDates:o.props.excludeDates,filterDate:o.props.filterDate,onClickOutside:o.handleCalendarClickOutside,formatWeekNumber:o.props.formatWeekNumber,highlightDates:o.state.highlightDates,includeDates:o.props.includeDates,includeTimes:o.props.includeTimes,injectTimes:o.props.injectTimes,inline:o.props.inline,peekNextMonth:o.props.peekNextMonth,showMonthDropdown:o.props.showMonthDropdown,showPreviousMonths:o.props.showPreviousMonths,useShortMonthInDropdown:o.props.useShortMonthInDropdown,showMonthYearDropdown:o.props.showMonthYearDropdown,showWeekNumbers:o.props.showWeekNumbers,showYearDropdown:o.props.showYearDropdown,withPortal:o.props.withPortal,forceShowMonthNavigation:o.props.forceShowMonthNavigation,showDisabledMonthNavigation:o.props.showDisabledMonthNavigation,scrollableYearDropdown:o.props.scrollableYearDropdown,scrollableMonthYearDropdown:o.props.scrollableMonthYearDropdown,todayButton:o.props.todayButton,weekLabel:o.props.weekLabel,outsideClickIgnoreClass:Mt,fixedHeight:o.props.fixedHeight,monthsShown:o.props.monthsShown,monthSelectedIn:o.state.monthSelectedIn,onDropdownFocus:o.handleDropdownFocus,onMonthChange:o.props.onMonthChange,onYearChange:o.props.onYearChange,dayClassName:o.props.dayClassName,monthClassName:o.props.monthClassName,timeClassName:o.props.timeClassName,showTimeSelect:o.props.showTimeSelect,showTimeSelectOnly:o.props.showTimeSelectOnly,onTimeChange:o.handleTimeChange,timeFormat:o.props.timeFormat,timeIntervals:o.props.timeIntervals,minTime:o.props.minTime,maxTime:o.props.maxTime,excludeTimes:o.props.excludeTimes,timeCaption:o.props.timeCaption,className:o.props.calendarClassName,container:o.props.calendarContainer,yearDropdownItemNumber:o.props.yearDropdownItemNumber,previousMonthButtonLabel:o.props.previousMonthButtonLabel,nextMonthButtonLabel:o.props.nextMonthButtonLabel,previousYearButtonLabel:o.props.previousYearButtonLabel,nextYearButtonLabel:o.props.nextYearButtonLabel,timeInputLabel:o.props.timeInputLabel,disabledKeyboardNavigation:o.props.disabledKeyboardNavigation,renderCustomHeader:o.props.renderCustomHeader,popperProps:o.props.popperProps,renderDayContents:o.props.renderDayContents,onDayMouseEnter:o.props.onDayMouseEnter,onMonthMouseLeave:o.props.onMonthMouseLeave,showTimeInput:o.props.showTimeInput,showMonthYearPicker:o.props.showMonthYearPicker,showQuarterYearPicker:o.props.showQuarterYearPicker,showPopperArrow:o.props.showPopperArrow,excludeScrollbar:o.props.excludeScrollbar,handleOnKeyDown:o.onDayKeyDown,isInputFocused:o.state.focused,customTimeInput:o.props.customTimeInput},o.props.children):null})),ue(ve(o),"renderDateInput",(function(){var e,r,a,s,i,p=n(o.props.className,ue({},Mt,o.state.open)),c=o.props.customInput||t.createElement("input",{type:"text"}),l=o.props.customInputRef||"ref",d="string"==typeof o.props.value?o.props.value:"string"==typeof o.state.inputValue?o.state.inputValue:(r=o.props.selected,a=o.props,s=a.dateFormat,i=a.locale,r&&Oe(r,Array.isArray(s)?s[0]:s,i)||"");return t.cloneElement(c,(ue(e={},l,(function(e){o.input=e})),ue(e,"value",d),ue(e,"onBlur",o.handleBlur),ue(e,"onChange",o.handleChange),ue(e,"onClick",o.onInputClick),ue(e,"onFocus",o.handleFocus),ue(e,"onKeyDown",o.onInputKeyDown),ue(e,"id",o.props.id),ue(e,"name",o.props.name),ue(e,"autoFocus",o.props.autoFocus),ue(e,"placeholder",o.props.placeholderText),ue(e,"disabled",o.props.disabled),ue(e,"autoComplete",o.props.autoComplete),ue(e,"className",n(c.props.className,p)),ue(e,"title",o.props.title),ue(e,"readOnly",o.props.readOnly),ue(e,"required",o.props.required),ue(e,"tabIndex",o.props.tabIndex),ue(e,"aria-labelledby",o.props.ariaLabelledBy),e))})),ue(ve(o),"renderClearButton",(function(){var e=o.props,r=e.isClearable,n=e.selected,a=e.clearButtonTitle,s=e.ariaLabelClose,i=void 0===s?"Close":s;return r&&null!=n?t.createElement("button",{type:"button",className:"react-datepicker__close-icon","aria-label":i,onClick:o.onClearClick,title:a,tabIndex:-1}):null})),o.state=o.calcInitialState(),o}return me(r,e),de(r,null,[{key:"defaultProps",get:function(){return{allowSameDay:!1,dateFormat:"MM/dd/yyyy",dateFormatCalendar:"LLLL yyyy",onChange:function(){},disabled:!1,disabledKeyboardNavigation:!1,dropdownMode:"scroll",onFocus:function(){},onBlur:function(){},onKeyDown:function(){},onInputClick:function(){},onSelect:function(){},onClickOutside:function(){},onMonthChange:function(){},onCalendarOpen:function(){},onCalendarClose:function(){},preventOpenOnFocus:!1,onYearChange:function(){},onInputError:function(){},monthsShown:1,readOnly:!1,withPortal:!1,shouldCloseOnSelect:!0,showTimeSelect:!1,showTimeInput:!1,showPreviousMonths:!1,showMonthYearPicker:!1,showQuarterYearPicker:!1,strictParsing:!1,timeIntervals:30,timeCaption:"Time",previousMonthButtonLabel:"Previous Month",nextMonthButtonLabel:"Next Month",previousYearButtonLabel:"Previous Year",nextYearButtonLabel:"Next Year",timeInputLabel:"Time",enableTabLoop:!0,renderDayContents:function(e){return e},inlineFocusSelectedMonth:!1,showPopperArrow:!0,excludeScrollbar:!0,customTimeInput:null}}}]),de(r,[{key:"componentDidUpdate",value:function(e,t){var r,n;e.inline&&(r=e.selected,n=this.props.selected,r&&n?S(r)!==S(n)||O(r)!==O(n):r!==n)&&this.setPreSelection(this.props.selected),void 0!==this.state.monthSelectedIn&&e.monthsShown!==this.props.monthsShown&&this.setState({monthSelectedIn:0}),e.highlightDates!==this.props.highlightDates&&this.setState({highlightDates:et(this.props.highlightDates)}),t.focused||Le(e.selected,this.props.selected)||this.setState({inputValue:null}),t.open!==this.state.open&&(!1===t.open&&!0===this.state.open&&this.props.onCalendarOpen(),!0===t.open&&!1===this.state.open&&this.props.onCalendarClose())}},{key:"componentWillUnmount",value:function(){this.clearPreventFocusTimeout()}},{key:"render",value:function(){var e=this.renderCalendar();return this.props.inline&&!this.props.withPortal?e:this.props.withPortal?t.createElement("div",null,this.props.inline?null:t.createElement("div",{className:"react-datepicker__input-container"},this.renderDateInput(),this.renderClearButton()),this.state.open||this.props.inline?t.createElement("div",{className:"react-datepicker__portal"},e):null):t.createElement(St,{className:this.props.popperClassName,wrapperClassName:this.props.wrapperClassName,hidePopper:!this.isCalendarOpen(),popperModifiers:this.props.popperModifiers,targetComponent:t.createElement("div",{className:"react-datepicker__input-container"},this.renderDateInput(),this.renderClearButton()),popperContainer:this.props.popperContainer,popperComponent:e,popperPlacement:this.props.popperPlacement,popperProps:this.props.popperProps,popperOnKeyDown:this.onPopperKeyDown,enableTabLoop:this.props.enableTabLoop})}}]),r}(t.Component),Nt="input",xt="navigate";e.CalendarContainer=vt,e.default=Et,e.getDefaultLocale=Fe,e.registerLocale=function(e,t){var r="undefined"!=typeof window?window:global;r.__localeData__||(r.__localeData__={}),r.__localeData__[e]=t},e.setDefaultLocale=function(e){("undefined"!=typeof window?window:global).__localeId__=e},Object.defineProperty(e,"__esModule",{value:!0})}));
 
-},{"react":"node_modules/react/index.js","prop-types":"node_modules/prop-types/index.js","classnames":"node_modules/classnames/index.js","date-fns/isDate":"node_modules/date-fns/esm/isDate/index.js","date-fns/isValid":"node_modules/date-fns/esm/isValid/index.js","date-fns/format":"node_modules/date-fns/esm/format/index.js","date-fns/addMinutes":"node_modules/date-fns/esm/addMinutes/index.js","date-fns/addHours":"node_modules/date-fns/esm/addHours/index.js","date-fns/addDays":"node_modules/date-fns/esm/addDays/index.js","date-fns/addWeeks":"node_modules/date-fns/esm/addWeeks/index.js","date-fns/addMonths":"node_modules/date-fns/esm/addMonths/index.js","date-fns/addYears":"node_modules/date-fns/esm/addYears/index.js","date-fns/subMinutes":"node_modules/date-fns/esm/subMinutes/index.js","date-fns/subHours":"node_modules/date-fns/esm/subHours/index.js","date-fns/subDays":"node_modules/date-fns/esm/subDays/index.js","date-fns/subWeeks":"node_modules/date-fns/esm/subWeeks/index.js","date-fns/subMonths":"node_modules/date-fns/esm/subMonths/index.js","date-fns/subYears":"node_modules/date-fns/esm/subYears/index.js","date-fns/getSeconds":"node_modules/date-fns/esm/getSeconds/index.js","date-fns/getMinutes":"node_modules/date-fns/esm/getMinutes/index.js","date-fns/getHours":"node_modules/date-fns/esm/getHours/index.js","date-fns/getDay":"node_modules/date-fns/esm/getDay/index.js","date-fns/getDate":"node_modules/date-fns/esm/getDate/index.js","date-fns/getWeek":"node_modules/date-fns/esm/getWeek/index.js","date-fns/getMonth":"node_modules/date-fns/esm/getMonth/index.js","date-fns/getQuarter":"node_modules/date-fns/esm/getQuarter/index.js","date-fns/getYear":"node_modules/date-fns/esm/getYear/index.js","date-fns/getTime":"node_modules/date-fns/esm/getTime/index.js","date-fns/setSeconds":"node_modules/date-fns/esm/setSeconds/index.js","date-fns/setMinutes":"node_modules/date-fns/esm/setMinutes/index.js","date-fns/setHours":"node_modules/date-fns/esm/setHours/index.js","date-fns/setMonth":"node_modules/date-fns/esm/setMonth/index.js","date-fns/setQuarter":"node_modules/date-fns/esm/setQuarter/index.js","date-fns/setYear":"node_modules/date-fns/esm/setYear/index.js","date-fns/min":"node_modules/date-fns/esm/min/index.js","date-fns/max":"node_modules/date-fns/esm/max/index.js","date-fns/differenceInCalendarDays":"node_modules/date-fns/esm/differenceInCalendarDays/index.js","date-fns/differenceInCalendarMonths":"node_modules/date-fns/esm/differenceInCalendarMonths/index.js","date-fns/differenceInCalendarWeeks":"node_modules/date-fns/esm/differenceInCalendarWeeks/index.js","date-fns/differenceInCalendarYears":"node_modules/date-fns/esm/differenceInCalendarYears/index.js","date-fns/startOfDay":"node_modules/date-fns/esm/startOfDay/index.js","date-fns/startOfWeek":"node_modules/date-fns/esm/startOfWeek/index.js","date-fns/startOfMonth":"node_modules/date-fns/esm/startOfMonth/index.js","date-fns/startOfQuarter":"node_modules/date-fns/esm/startOfQuarter/index.js","date-fns/startOfYear":"node_modules/date-fns/esm/startOfYear/index.js","date-fns/endOfDay":"node_modules/date-fns/esm/endOfDay/index.js","date-fns/endOfWeek":"node_modules/date-fns/esm/endOfWeek/index.js","date-fns/endOfMonth":"node_modules/date-fns/esm/endOfMonth/index.js","date-fns/isEqual":"node_modules/date-fns/esm/isEqual/index.js","date-fns/isSameDay":"node_modules/date-fns/esm/isSameDay/index.js","date-fns/isSameMonth":"node_modules/date-fns/esm/isSameMonth/index.js","date-fns/isSameYear":"node_modules/date-fns/esm/isSameYear/index.js","date-fns/isSameQuarter":"node_modules/date-fns/esm/isSameQuarter/index.js","date-fns/isAfter":"node_modules/date-fns/esm/isAfter/index.js","date-fns/isBefore":"node_modules/date-fns/esm/isBefore/index.js","date-fns/isWithinInterval":"node_modules/date-fns/esm/isWithinInterval/index.js","date-fns/toDate":"node_modules/date-fns/esm/toDate/index.js","date-fns/parse":"node_modules/date-fns/esm/parse/index.js","date-fns/parseISO":"node_modules/date-fns/esm/parseISO/index.js","react-onclickoutside":"node_modules/react-onclickoutside/dist/react-onclickoutside.es.js","react-popper":"node_modules/react-popper/lib/esm/index.js"}],"src/screens/Notes/Note.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","prop-types":"node_modules/prop-types/index.js","classnames":"node_modules/classnames/index.js","date-fns/isDate":"node_modules/date-fns/esm/isDate/index.js","date-fns/isValid":"node_modules/date-fns/esm/isValid/index.js","date-fns/format":"node_modules/date-fns/esm/format/index.js","date-fns/addMinutes":"node_modules/date-fns/esm/addMinutes/index.js","date-fns/addHours":"node_modules/date-fns/esm/addHours/index.js","date-fns/addDays":"node_modules/date-fns/esm/addDays/index.js","date-fns/addWeeks":"node_modules/date-fns/esm/addWeeks/index.js","date-fns/addMonths":"node_modules/date-fns/esm/addMonths/index.js","date-fns/addYears":"node_modules/date-fns/esm/addYears/index.js","date-fns/subMinutes":"node_modules/date-fns/esm/subMinutes/index.js","date-fns/subHours":"node_modules/date-fns/esm/subHours/index.js","date-fns/subDays":"node_modules/date-fns/esm/subDays/index.js","date-fns/subWeeks":"node_modules/date-fns/esm/subWeeks/index.js","date-fns/subMonths":"node_modules/date-fns/esm/subMonths/index.js","date-fns/subYears":"node_modules/date-fns/esm/subYears/index.js","date-fns/getSeconds":"node_modules/date-fns/esm/getSeconds/index.js","date-fns/getMinutes":"node_modules/date-fns/esm/getMinutes/index.js","date-fns/getHours":"node_modules/date-fns/esm/getHours/index.js","date-fns/getDay":"node_modules/date-fns/esm/getDay/index.js","date-fns/getDate":"node_modules/date-fns/esm/getDate/index.js","date-fns/getWeek":"node_modules/date-fns/esm/getWeek/index.js","date-fns/getMonth":"node_modules/date-fns/esm/getMonth/index.js","date-fns/getQuarter":"node_modules/date-fns/esm/getQuarter/index.js","date-fns/getYear":"node_modules/date-fns/esm/getYear/index.js","date-fns/getTime":"node_modules/date-fns/esm/getTime/index.js","date-fns/setSeconds":"node_modules/date-fns/esm/setSeconds/index.js","date-fns/setMinutes":"node_modules/date-fns/esm/setMinutes/index.js","date-fns/setHours":"node_modules/date-fns/esm/setHours/index.js","date-fns/setMonth":"node_modules/date-fns/esm/setMonth/index.js","date-fns/setQuarter":"node_modules/date-fns/esm/setQuarter/index.js","date-fns/setYear":"node_modules/date-fns/esm/setYear/index.js","date-fns/min":"node_modules/date-fns/esm/min/index.js","date-fns/max":"node_modules/date-fns/esm/max/index.js","date-fns/differenceInCalendarDays":"node_modules/date-fns/esm/differenceInCalendarDays/index.js","date-fns/differenceInCalendarMonths":"node_modules/date-fns/esm/differenceInCalendarMonths/index.js","date-fns/differenceInCalendarWeeks":"node_modules/date-fns/esm/differenceInCalendarWeeks/index.js","date-fns/differenceInCalendarYears":"node_modules/date-fns/esm/differenceInCalendarYears/index.js","date-fns/startOfDay":"node_modules/date-fns/esm/startOfDay/index.js","date-fns/startOfWeek":"node_modules/date-fns/esm/startOfWeek/index.js","date-fns/startOfMonth":"node_modules/date-fns/esm/startOfMonth/index.js","date-fns/startOfQuarter":"node_modules/date-fns/esm/startOfQuarter/index.js","date-fns/startOfYear":"node_modules/date-fns/esm/startOfYear/index.js","date-fns/endOfDay":"node_modules/date-fns/esm/endOfDay/index.js","date-fns/endOfWeek":"node_modules/date-fns/esm/endOfWeek/index.js","date-fns/endOfMonth":"node_modules/date-fns/esm/endOfMonth/index.js","date-fns/isEqual":"node_modules/date-fns/esm/isEqual/index.js","date-fns/isSameDay":"node_modules/date-fns/esm/isSameDay/index.js","date-fns/isSameMonth":"node_modules/date-fns/esm/isSameMonth/index.js","date-fns/isSameYear":"node_modules/date-fns/esm/isSameYear/index.js","date-fns/isSameQuarter":"node_modules/date-fns/esm/isSameQuarter/index.js","date-fns/isAfter":"node_modules/date-fns/esm/isAfter/index.js","date-fns/isBefore":"node_modules/date-fns/esm/isBefore/index.js","date-fns/isWithinInterval":"node_modules/date-fns/esm/isWithinInterval/index.js","date-fns/toDate":"node_modules/date-fns/esm/toDate/index.js","date-fns/parse":"node_modules/date-fns/esm/parse/index.js","date-fns/parseISO":"node_modules/date-fns/esm/parseISO/index.js","react-onclickoutside":"node_modules/react-onclickoutside/dist/react-onclickoutside.es.js","react-popper":"node_modules/react-popper/lib/esm/index.js"}],"src/screens/components/Input.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _styletronReact = require("styletron-react");
+
+var _default = (0, _styletronReact.styled)("textarea", function (_ref) {
+  var $bold = _ref.$bold,
+      $italics = _ref.$italics,
+      $underlined = _ref.$underlined;
+  return {
+    border: "none",
+    width: "100%",
+    padding: " 0.5rem",
+    "border-radius": " 6px",
+    "font-size": " 1rem",
+    "border-width": " 1px",
+    "background-color": "transparent",
+    ":focus": {
+      border: "none",
+      outline: "none"
+    },
+    fontWeight: $bold ? 800 : 400,
+    fontStyle: $italics ? "italic" : "normal",
+    textDecoration: $underlined ? "underline" : "none"
+  };
+});
+
+exports.default = _default;
+},{"styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js"}],"src/screens/Notes/Note.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -94531,9 +95440,23 @@ var _dateFns = require("date-fns");
 
 var _reactDatepicker = _interopRequireDefault(require("react-datepicker"));
 
-var _theme = _interopRequireDefault(require("../../theme"));
+var _theme = _interopRequireWildcard(require("../../theme"));
+
+var _Input = _interopRequireDefault(require("../components/Input"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -94577,7 +95500,27 @@ var Actions = (0, _styletronReact.styled)("div", function () {
   return {
     display: "flex",
     marginTop: "1rem",
+    flexDirection: "row",
     justifyContent: "flex-start"
+  };
+});
+var TextStyles = (0, _styletronReact.styled)("div", function () {
+  return {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginLeft: "auto"
+  };
+});
+var TextStyleButton = (0, _styletronReact.styled)("button", function (_ref2) {
+  var $selected = _ref2.$selected,
+      theme = _ref2.theme;
+  return {
+    textTransform: "uppercase",
+    height: "2rem",
+    width: "2rem",
+    marginLeft: "1rem",
+    borderRadius: "6px",
+    backgroundColor: $selected ? _theme.cardThemes[theme].primaryColor : "transparent"
   };
 });
 var TimeContainer = (0, _styletronReact.styled)("span", function () {
@@ -94593,18 +95536,30 @@ var FooterContainer = (0, _styletronReact.styled)("div", function () {
     justifyContent: "space-between"
   };
 });
-var Footer = (0, _styletronReact.styled)("div", function (_ref2) {
-  var $show = _ref2.$show;
+var Footer = (0, _styletronReact.styled)("div", function (_ref3) {
+  var $show = _ref3.$show;
   return {
     display: $show ? "flex" : "none",
     flexDirection: "column"
   };
 });
+var Preview = (0, _styletronReact.styled)("div", function (_ref4) {
+  var $bold = _ref4.$bold,
+      $italics = _ref4.$italics,
+      $underlined = _ref4.$underlined;
+  return {
+    width: "100%",
+    minHeight: "1rem",
+    fontWeight: $bold ? 800 : 400,
+    fontStyle: $italics ? "italic" : "normal",
+    textDecoration: $underlined ? "underline" : "none"
+  };
+});
 
-var ButtonWithTooltip = function ButtonWithTooltip(_ref3) {
-  var _ref3$label = _ref3.label,
-      label = _ref3$label === void 0 ? "" : _ref3$label,
-      props = _objectWithoutProperties(_ref3, ["label"]);
+var ButtonWithTooltip = function ButtonWithTooltip(_ref5) {
+  var _ref5$label = _ref5.label,
+      label = _ref5$label === void 0 ? "" : _ref5$label,
+      props = _objectWithoutProperties(_ref5, ["label"]);
 
   return _react.default.createElement(_core.Tooltip, {
     zIndex: 2,
@@ -94613,57 +95568,88 @@ var ButtonWithTooltip = function ButtonWithTooltip(_ref3) {
   }, _react.default.createElement(_core.IconButton, props));
 };
 
-var _default = function _default(_ref4) {
-  var _ref4$details = _ref4.details,
-      details = _ref4$details === void 0 ? {} : _ref4$details,
-      isCategoryFocused = _ref4.isCategoryFocused,
-      onUpdate = _ref4.onUpdate,
-      onDelete = _ref4.onDelete;
+var _default = function _default(_ref6) {
+  var _ref6$details = _ref6.details,
+      details = _ref6$details === void 0 ? {} : _ref6$details,
+      isCategoryFocused = _ref6.isCategoryFocused,
+      onUpdate = _ref6.onUpdate,
+      onDelete = _ref6.onDelete,
+      theme = _ref6.theme;
   var _details$content = details.content,
       content = _details$content === void 0 ? "" : _details$content,
       id = details.id,
       completionDate = details.completionDate,
-      completed = details.completed;
+      completed = details.completed,
+      _details$styles = details.styles,
+      styles = _details$styles === void 0 ? [] : _details$styles;
 
   var _React$useState = _react.default.useState(false),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      isFocused = _React$useState2[0],
-      setIsFocused = _React$useState2[1];
+      _React$useState2 = _slicedToArray(_React$useState, 1),
+      isFocused = _React$useState2[0];
 
   var handleAdd = function handleAdd(key, value) {
     onUpdate(_objectSpread({}, details, _defineProperty({}, key, value)));
   };
 
+  var updateStyle = function updateStyle(style) {
+    return handleAdd("styles", styles.includes(style) ? styles.filter(function (s) {
+      return s !== style;
+    }) : [].concat(_toConsumableArray(styles), [style]));
+  };
+
+  var _React$useState3 = _react.default.useState(false),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      isNoteInputFocused = _React$useState4[0],
+      setNoteInputFocused = _React$useState4[1];
+
   return _react.default.createElement(NoteCard, {
     $focused: isFocused
-  }, isFocused && _react.default.createElement(_core.CloseButton, {
+  }, isNoteInputFocused && _react.default.createElement(_core.CloseButton, {
     position: "absolute",
     size: "sm",
-    top: "0.1rem",
-    right: "0.1rem",
+    top: "-1rem",
+    right: "0rem",
     onClick: function onClick() {
-      return setIsFocused(false);
+      return setNoteInputFocused(false);
     }
-  }), _react.default.createElement(Note, null, _react.default.createElement("div", null, completed ? "✔" : "●", " \xA0\xA0"), _react.default.createElement(_core.Editable, {
-    key: Math.random(),
-    onSubmit: function onSubmit(value) {
-      return value && handleAdd("content", value);
+  }), _react.default.createElement(Note, null, _react.default.createElement("div", {
+    style: {
+      color: completed ? "#11FF33" : "#000"
+    }
+  }, completed ? "✔" : "●", " \xA0\xA0"), isNoteInputFocused ? _react.default.createElement(_Input.default, {
+    autoFocus: true,
+    rows: 10,
+    defaultValue: content,
+    $bold: styles.includes("b"),
+    $italics: styles.includes("i"),
+    $underlined: styles.includes("u"),
+    onKeyDown: function onKeyDown(e) {
+      if (e.keyCode === 13 && e.shiftKey === false) {
+        e.preventDefault();
+        handleAdd("content", e.target.value);
+        setNoteInputFocused(false);
+      }
     },
     placeholder: "Click to add a note",
-    width: "100%",
-    defaultValue: content,
-    isPreviewFocusable: isCategoryFocused,
-    onFocus: function onFocus() {
-      setIsFocused(true);
+    onBlur: function onBlur(e) {
+      handleAdd("content", e.target.value);
     }
-  }, _react.default.createElement(_core.EditableInput, {
-    name: "content"
-  }), _react.default.createElement(_core.EditablePreview, null))), _react.default.createElement(Footer, {
-    $show: isFocused
-  }, _react.default.createElement(FooterContainer, null, _react.default.createElement(TimeContainer, null, "Completion time -", " ", completionDate ? (0, _dateFns.formatDistanceToNow)(new Date(completionDate)) : ""), _react.default.createElement(Actions, null, _react.default.createElement(ButtonWithTooltip, {
+  }) : _react.default.createElement(Preview, {
+    onClick: function onClick() {
+      if (isCategoryFocused) {
+        setNoteInputFocused(true);
+      }
+    },
+    $bold: styles.includes("b"),
+    $italics: styles.includes("i"),
+    $underlined: styles.includes("u")
+  }, String(content).length ? String(content) : "Click here to add a note")), content.length ? _react.default.createElement(Footer, {
+    $show: isNoteInputFocused
+  }, _react.default.createElement(FooterContainer, null, _react.default.createElement(TimeContainer, null, "Time left -", " ", completionDate ? (0, _dateFns.formatDistanceToNow)(new Date(completionDate)) : ""), _react.default.createElement(Actions, null, _react.default.createElement(ButtonWithTooltip, {
     label: "Delete",
     disabled: !id,
     size: "sm",
+    variantColor: "black",
     variant: "outline",
     isRound: true,
     icon: "delete",
@@ -94672,9 +95658,10 @@ var _default = function _default(_ref4) {
         onDelete();
       }
     }
-  }), _react.default.createElement(ButtonWithTooltip, {
+  }), !completed && _react.default.createElement(ButtonWithTooltip, {
     label: "Mark as Complete",
     size: "sm",
+    variantColor: "black",
     variant: "outline",
     isRound: true,
     marginLeft: "1rem",
@@ -94695,16 +95682,44 @@ var _default = function _default(_ref4) {
     customInput: _react.default.createElement(ButtonWithTooltip, {
       label: "Update Completion Time",
       size: "sm",
+      variantColor: "black",
       variant: "outline",
       isRound: true,
       marginLeft: "1rem",
       icon: "calendar"
     })
-  })))));
+  }), _react.default.createElement(TextStyles, null, _react.default.createElement(TextStyleButton, {
+    onClick: function onClick() {
+      return updateStyle("b");
+    },
+    $style: {
+      fontWeight: "bold"
+    },
+    $selected: styles.includes("b"),
+    theme: theme
+  }, "B"), _react.default.createElement(TextStyleButton, {
+    onClick: function onClick() {
+      return updateStyle("i");
+    },
+    $style: {
+      fontStyle: "italic"
+    },
+    $selected: styles.includes("i"),
+    theme: theme
+  }, "I"), _react.default.createElement(TextStyleButton, {
+    onClick: function onClick() {
+      return updateStyle("u");
+    },
+    $style: {
+      textDecoration: "underline"
+    },
+    $selected: styles.includes("u"),
+    theme: theme
+  }, "U"))))) : null);
 };
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","@chakra-ui/core":"node_modules/@chakra-ui/core/dist/es/index.js","date-fns":"node_modules/date-fns/esm/index.js","react-datepicker":"node_modules/react-datepicker/dist/react-datepicker.min.js","../../theme":"src/theme.js"}],"src/screens/Notes/Category.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","@chakra-ui/core":"node_modules/@chakra-ui/core/dist/es/index.js","date-fns":"node_modules/date-fns/esm/index.js","react-datepicker":"node_modules/react-datepicker/dist/react-datepicker.min.js","../../theme":"src/theme.js","../components/Input":"src/screens/components/Input.js"}],"src/screens/Notes/Category.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -94941,13 +95956,16 @@ var _default = function _default(_ref3) {
   }), _react.default.createElement(_core.EditablePreview, null))), _react.default.createElement(NoteCardContainer, null, notes.map(function (note) {
     return _react.default.createElement(_Note.default, {
       key: note.id,
+      theme: theme,
       details: note,
       isCategoryFocused: isFocused,
       onUpdate: handleUpdateNote(note.id),
       onDelete: handleDeleteNote(note.id)
     });
   })), _react.default.createElement(_Note.default, {
+    theme: theme,
     onUpdate: handleUpdateNote(),
+    isCategoryFocused: isFocused,
     details: {},
     mode: "ADD"
   }), _react.default.createElement(_core.Popover, {
@@ -94996,11 +96014,25 @@ var _react = _interopRequireDefault(require("react"));
 
 var _styletronReact = require("styletron-react");
 
+var _v = _interopRequireDefault(require("uuid/v4"));
+
 var _Category = _interopRequireDefault(require("./Category"));
 
 var _useCategory2 = require("../../contexts/useCategory");
 
+var _core = require("@chakra-ui/core");
+
+var _theme = _interopRequireDefault(require("../../theme"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -95019,6 +96051,9 @@ var NotesContainer = (0, _styletronReact.styled)("div", function () {
     width: "100vw",
     minHeight: "100vh",
     backgroundImage: "url('./assets/notes-bg.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundAttachment: "fixed",
     position: "relative"
   };
 });
@@ -95052,10 +96087,22 @@ var Heading = (0, _styletronReact.styled)("div", function () {
     position: "relative"
   };
 });
+var CategoryAddButton = (0, _styletronReact.styled)(_core.Button, function () {
+  return {
+    minHeight: "14rem",
+    width: "21%",
+    padding: "2rem 1rem",
+    marginLeft: "3rem",
+    borderRadius: "6px",
+    cursor: "pointer",
+    color: _theme.default.primaryColor
+  };
+});
 
 var _default = function _default() {
   var _useCategory = (0, _useCategory2.useCategory)(),
-      categories = _useCategory.categories;
+      categories = _useCategory.categories,
+      setCategories = _useCategory.setCategories;
 
   var _React$useState = _react.default.useState(""),
       _React$useState2 = _slicedToArray(_React$useState, 2),
@@ -95073,6 +96120,18 @@ var _default = function _default() {
     setSelectedCategory("");
   };
 
+  var addCategory = function addCategory() {
+    var newCategory = {
+      theme: "default",
+      notes: [],
+      heading: "",
+      id: (0, _v.default)()
+    };
+    setCategories(function (categories) {
+      return [].concat(_toConsumableArray(categories), [newCategory]);
+    });
+  };
+
   return _react.default.createElement(NotesContainer, null, _react.default.createElement(Overlay, null), _react.default.createElement(Heading, null, "Start Keeping your notes"), _react.default.createElement(CategoryContainer, null, categories.map(function (category) {
     return _react.default.createElement(_Category.default, {
       key: category.id,
@@ -95081,11 +96140,14 @@ var _default = function _default() {
       onClose: closeSelectedCategory,
       details: category
     });
-  })));
+  }), _react.default.createElement(CategoryAddButton, {
+    fontSize: "2rem",
+    onClick: addCategory
+  }, "+ Add Category")));
 };
 
 exports.default = _default;
-},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","./Category":"src/screens/Notes/Category.js","../../contexts/useCategory":"src/contexts/useCategory.js"}],"src/App.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","uuid/v4":"node_modules/uuid/v4.js","./Category":"src/screens/Notes/Category.js","../../contexts/useCategory":"src/contexts/useCategory.js","@chakra-ui/core":"node_modules/@chakra-ui/core/dist/es/index.js","../../theme":"src/theme.js"}],"src/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -95129,11 +96191,11 @@ require("react-datepicker/dist/react-datepicker.css");
 
 var _styletronEngineAtomic = require("styletron-engine-atomic");
 
+var _useCategory = require("./src/contexts/useCategory");
+
 var _styletronReact = require("styletron-react");
 
 var _core = require("@chakra-ui/core");
-
-var _useCategory = require("./src/contexts/useCategory");
 
 var _App = _interopRequireDefault(require("./src/App"));
 
@@ -95147,7 +96209,7 @@ _reactDom.default.render(_react.default.createElement(_styletronReact.Provider, 
 }, _react.default.createElement(_core.ThemeProvider, {
   theme: _core.theme
 }, _react.default.createElement(_useCategory.CategoryProvider, null, _react.default.createElement(_core.CSSReset, null), _react.default.createElement(_App.default, null)))), document.getElementById("root"));
-},{"panic-overlay":"node_modules/panic-overlay/panic-overlay.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-datepicker/dist/react-datepicker.css":"node_modules/react-datepicker/dist/react-datepicker.css","styletron-engine-atomic":"node_modules/styletron-engine-atomic/dist/browser.es5.es.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","@chakra-ui/core":"node_modules/@chakra-ui/core/dist/es/index.js","./src/contexts/useCategory":"src/contexts/useCategory.js","./src/App":"src/App.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"panic-overlay":"node_modules/panic-overlay/panic-overlay.js","react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","react-datepicker/dist/react-datepicker.css":"node_modules/react-datepicker/dist/react-datepicker.css","styletron-engine-atomic":"node_modules/styletron-engine-atomic/dist/browser.es5.es.js","./src/contexts/useCategory":"src/contexts/useCategory.js","styletron-react":"node_modules/styletron-react/dist/browser.es5.es.js","@chakra-ui/core":"node_modules/@chakra-ui/core/dist/es/index.js","./src/App":"src/App.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -95175,7 +96237,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51000" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52957" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
