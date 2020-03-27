@@ -95508,7 +95508,8 @@ var TextStyles = (0, _styletronReact.styled)("div", function () {
   return {
     display: "flex",
     justifyContent: "flex-end",
-    marginLeft: "auto"
+    marginLeft: "auto",
+    alignItems: 'flex-end'
   };
 });
 var TextStyleButton = (0, _styletronReact.styled)("button", function (_ref2) {
@@ -95516,11 +95517,12 @@ var TextStyleButton = (0, _styletronReact.styled)("button", function (_ref2) {
       theme = _ref2.theme;
   return {
     textTransform: "uppercase",
-    height: "2rem",
-    width: "2rem",
+    height: "1rem",
+    width: "1rem",
     marginLeft: "1rem",
     borderRadius: "6px",
-    backgroundColor: $selected ? _theme.cardThemes[theme].primaryColor : "transparent"
+    backgroundColor: $selected ? _theme.cardThemes[theme].primaryColor : "transparent",
+    outline: "none"
   };
 });
 var TimeContainer = (0, _styletronReact.styled)("span", function () {
@@ -95626,13 +95628,13 @@ var _default = function _default(_ref6) {
     onKeyDown: function onKeyDown(e) {
       if (e.keyCode === 13 && e.shiftKey === false) {
         e.preventDefault();
-        handleAdd("content", e.target.value);
+        e.target.value && handleAdd("content", e.target.value);
         setNoteInputFocused(false);
       }
     },
     placeholder: "Click to add a note",
     onBlur: function onBlur(e) {
-      handleAdd("content", e.target.value);
+      e.target.value && handleAdd("content", e.target.value);
     }
   }) : _react.default.createElement(Preview, {
     onClick: function onClick() {
@@ -96237,7 +96239,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52957" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54536" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

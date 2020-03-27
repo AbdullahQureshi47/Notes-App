@@ -30,15 +30,17 @@ const TextStyles = styled("div", () => ({
   display: "flex",
   justifyContent: "flex-end",
   marginLeft: "auto",
+  alignItems: 'flex-end'
 }));
 
 const TextStyleButton = styled("button", ({ $selected, theme }) => ({
   textTransform: "uppercase",
-  height: "2rem",
-  width: "2rem",
+  height: "1rem",
+  width: "1rem",
   marginLeft: "1rem",
   borderRadius: "6px",
   backgroundColor: $selected ? cardThemes[theme].primaryColor : "transparent",
+  outline: "none",
 }));
 
 const TimeContainer = styled("span", () => ({
@@ -127,13 +129,13 @@ export default ({
             onKeyDown={(e) => {
               if (e.keyCode === 13 && e.shiftKey === false) {
                 e.preventDefault();
-                handleAdd("content", e.target.value);
+                e.target.value && handleAdd("content", e.target.value);
                 setNoteInputFocused(false);
               }
             }}
             placeholder="Click to add a note"
             onBlur={(e) => {
-              handleAdd("content", e.target.value);
+              e.target.value && handleAdd("content", e.target.value);
             }}
           />
         ) : (
