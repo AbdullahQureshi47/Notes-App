@@ -3,11 +3,16 @@ import { styled } from "styletron-react";
 import uuidv4 from "uuid/v4";
 import Category from "./Category";
 import { useCategory } from "../../contexts/useCategory";
+import { Button } from "@chakra-ui/core";
+import theme from "../../theme";
 
 const NotesContainer = styled("div", () => ({
   width: "100vw",
   minHeight: "100vh",
   backgroundImage: "url('./assets/notes-bg.jpg')",
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundAttachment: "fixed",
   position: "relative",
 }));
 
