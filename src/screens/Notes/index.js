@@ -1,5 +1,6 @@
 import React from "react";
 import { styled } from "styletron-react";
+import uuidv4 from "uuid/v4";
 import Category from "./Category";
 import { useCategory } from "../../contexts/useCategory";
 
@@ -40,7 +41,7 @@ const Heading = styled("div", () => ({
 }));
 
 export default () => {
-  const { categories } = useCategory();
+  const { categories, setCategories } = useCategory();
   const [selectedCategory, setSelectedCategory] = React.useState("");
   const handleSelectCategory = (id) => () => {
     setSelectedCategory(id);
@@ -48,6 +49,16 @@ export default () => {
   const closeSelectedCategory = (e) => {
     e.stopPropagation();
     setSelectedCategory("");
+  };
+
+  const addCategory = () => {
+    const newCategory = {
+      theme: "default",
+      notes: [],
+      heading: "",
+      id: uuidv4(),
+    };
+    setCategories((categories) => [...categories, newCategory]);
   };
 
   return (
@@ -64,7 +75,9 @@ export default () => {
             details={category}
           />
         ))}
-
+        <CategoryAddButton fontSize = "2rem" onClick={addCategory}>
+          + Add Category
+        </CategoryAddButton>
       </CategoryContainer>
     </NotesContainer>
   );
