@@ -174,6 +174,7 @@ export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
         {notes.map((note) => (
           <Note
             key={note.id}
+            theme={theme}
             details={note}
             isCategoryFocused={isFocused}
             onUpdate={handleUpdateNote(note.id)}
@@ -181,7 +182,13 @@ export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
           />
         ))}
       </NoteCardContainer>
-      <Note onUpdate={handleUpdateNote()} details={{}} mode="ADD" />
+      <Note
+        theme={theme}
+        onUpdate={handleUpdateNote()}
+        isCategoryFocused={isFocused}
+        details={{}}
+        mode="ADD"
+      />
 
       <Popover placement="top">
         <PopoverTrigger>
