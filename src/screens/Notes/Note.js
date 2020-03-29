@@ -1,18 +1,18 @@
 import React from "react";
 import { styled } from "styletron-react";
-import { CloseButton, IconButton, Tooltip } from "@chakra-ui/core";
-import { formatDistanceToNow } from "date-fns";
+import { IconButton, Tooltip } from "@chakra-ui/core";
 import Datepicker from "react-datepicker";
 import theme, { cardThemes } from "../../theme";
 import Input from "../components/Input";
+import { getExactDifference } from "../../utils";
 
 const NoteCard = styled("div", ({ $focused }) => ({
   position: "relative",
-  padding: $focused ? "1.2rem" : "0.4rem",
+  padding: "0.4rem",
   border: $focused ? `2px solid ${theme.grey}` : "none",
   width: "100%",
   borderRadius: "6px",
-  marginTop: "1rem",
+  marginTop: "0.4rem",
 }));
 
 const Note = styled("div", () => ({
@@ -30,13 +30,14 @@ const TextStyles = styled("div", () => ({
   display: "flex",
   justifyContent: "flex-end",
   marginLeft: "auto",
-  alignItems: 'flex-end'
+  alignItems: "flex-end",
 }));
 
 const TextStyleButton = styled("button", ({ $selected, theme }) => ({
   textTransform: "uppercase",
-  height: "1rem",
-  width: "1rem",
+  padding: "0.3rem",
+  height: "1.5rem",
+  width: "1.5rem",
   marginLeft: "1rem",
   borderRadius: "6px",
   backgroundColor: $selected ? cardThemes[theme].primaryColor : "transparent",
@@ -61,7 +62,7 @@ const Footer = styled("div", ({ $show }) => ({
 
 const Preview = styled("div", ({ $bold, $italics, $underlined }) => ({
   width: "100%",
-  minHeight: "1rem",
+  minHeight: "0.4rem",
   fontWeight: $bold ? 800 : 400,
   fontStyle: $italics ? "italic" : "normal",
   textDecoration: $underlined ? "underline" : "none",
@@ -69,111 +70,109 @@ const Preview = styled("div", ({ $bold, $italics, $underlined }) => ({
 
 const ButtonWithTooltip = ({ label = "", ...props }) => (
   <Tooltip zIndex={2} hasArrow label={label}>
-    <IconButton {...props} />
+    <IconButton
+      borderColor="black"
+      size="sm"
+      variant="outline"
+      isRound={true}
+      {...props}
+    />
   </Tooltip>
 );
 
-export default ({
-  details = {},
-  isCategoryFocused,
-  onUpdate,
-  onDelete,
-  theme,
-}) => {
-  const { content = "", id, completionDate, completed, styles = [] } = details;
-  const [isFocused] = React.useState(false);
-  const handleAdd = (key, value) => {
-    onUpdate({
-      ...details,
-      [key]: value,
-    });
-  };
+export default React.memo(
+  ({
+    details = {},
+    isCategoryFocused,
+    onUpdate,
+    onDelete,
+    theme,
+    focusedInput,
+    setFocusedInput,
+  }) => {
+    const {
+      content = "",
+      id,
+      completionDate,
+      completed,
+      styles = [],
+    } = details;
+    const handleAdd = (key, value) => {
+      onUpdate({
+        ...details,
+        [key]: value,
+      });
+    };
 
-  const updateStyle = (style) =>
-    handleAdd(
-      "styles",
-      styles.includes(style)
-        ? styles.filter((s) => s !== style)
-        : [...styles, style]
-    );
+    const updateStyle = (style) =>
+      handleAdd(
+        "styles",
+        styles.includes(style)
+          ? styles.filter((s) => s !== style)
+          : [...styles, style]
+      );
 
-  const [isNoteInputFocused, setNoteInputFocused] = React.useState(false);
+    const isInputFocused = focusedInput === id && isCategoryFocused;
 
-  return (
-    <NoteCard $focused={isFocused}>
-      {isNoteInputFocused && (
-        <CloseButton
-          position="absolute"
-          size="sm"
-          top="-1rem"
-          right="0rem"
-          onClick={() => setNoteInputFocused(false)}
-        />
-      )}
-      <Note>
-        <div
-          style={{
-            color: completed ? "#11FF33" : "#000",
-          }}
-        >
-          {completed ? "✔" : "●"} &nbsp;&nbsp;
-        </div>
-        {isNoteInputFocused ? (
-          <Input
-            autoFocus
-            rows={10}
-            defaultValue={content}
-            $bold={styles.includes("b")}
-            $italics={styles.includes("i")}
-            $underlined={styles.includes("u")}
-            onKeyDown={(e) => {
-              if (e.keyCode === 13 && e.shiftKey === false) {
-                e.preventDefault();
-                e.target.value && handleAdd("content", e.target.value);
-                setNoteInputFocused(false);
-              }
+    return (
+      <NoteCard>
+        <Note>
+          <div
+            style={{
+              color: completed ? "#11FF33" : "#000",
             }}
-            placeholder="Click to add a note"
-            onBlur={(e) => {
-              e.target.value && handleAdd("content", e.target.value);
-            }}
-          />
-        ) : (
-          <Preview
-            onClick={() => {
-              if (isCategoryFocused) {
-                setNoteInputFocused(true);
-              }
-            }}
-            $bold={styles.includes("b")}
-            $italics={styles.includes("i")}
-            $underlined={styles.includes("u")}
           >
-            {String(content).length
-              ? String(content)
-              : "Click here to add a note"}
-          </Preview>
-        )}
-      </Note>
+            {completed ? "✔" : "●"} &nbsp;&nbsp;
+          </div>
+          {isInputFocused ? (
+            <Input
+              autoFocus
+              rows={6}
+              defaultValue={content}
+              $bold={styles.includes("b")}
+              $italics={styles.includes("i")}
+              $underlined={styles.includes("u")}
+              onKeyDown={(e) => {
+                if (e.keyCode === 13 && e.shiftKey === false) {
+                  e.preventDefault();
+                  e.target.value && handleAdd("content", e.target.value);
+                  setFocusedInput("");
+                }
+              }}
+              placeholder="Click to add a note"
+              onBlur={(e) => {
+                e.target.value && handleAdd("content", e.target.value);
+              }}
+            />
+          ) : (
+            <Preview
+              onClick={() => {
+                if (isCategoryFocused) {
+                  setFocusedInput(id);
+                }
+              }}
+              $bold={styles.includes("b")}
+              $italics={styles.includes("i")}
+              $underlined={styles.includes("u")}
+            >
+              {String(content).length
+                ? String(content)
+                : "Click here to add a note"}
+            </Preview>
+          )}
+        </Note>
 
-      {content.length ? (
-        <Footer $show={isNoteInputFocused}>
+        <Footer $show={isInputFocused}>
           <FooterContainer>
             <TimeContainer>
               Time left -{" "}
-              {completionDate
-                ? formatDistanceToNow(new Date(completionDate))
-                : ""}
+              {completionDate ? getExactDifference(completionDate) : ""}
             </TimeContainer>
 
             <Actions>
               <ButtonWithTooltip
                 label="Delete"
                 disabled={!id}
-                size="sm"
-                variantColor="black"
-                variant="outline"
-                isRound={true}
                 icon="delete"
                 onClick={() => {
                   if (confirm("Are you sure you want to delete?")) {
@@ -181,18 +180,13 @@ export default ({
                   }
                 }}
               />
-              {!completed && (
-                <ButtonWithTooltip
-                  label="Mark as Complete"
-                  size="sm"
-                  variantColor="black"
-                  variant="outline"
-                  isRound={true}
-                  marginLeft="1rem"
-                  icon="check"
-                  onClick={() => handleAdd("completed", true)}
-                />
-              )}
+              <ButtonWithTooltip
+                label={`Mark as ${completed ? "not complete" : "completed"}`}
+                marginLeft="1rem"
+                icon={completed ? "close" : "check"}
+                onClick={() => handleAdd("completed", !completed)}
+              />
+
               <Datepicker
                 minDate={Date.now()}
                 selected={
@@ -206,10 +200,6 @@ export default ({
                 customInput={
                   <ButtonWithTooltip
                     label="Update Completion Time"
-                    size="sm"
-                    variantColor="black"
-                    variant="outline"
-                    isRound={true}
                     marginLeft="1rem"
                     icon="calendar"
                   />
@@ -250,7 +240,7 @@ export default ({
             </Actions>
           </FooterContainer>
         </Footer>
-      ) : null}
-    </NoteCard>
-  );
-};
+      </NoteCard>
+    );
+  }
+);
