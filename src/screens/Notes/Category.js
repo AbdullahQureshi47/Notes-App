@@ -61,171 +61,191 @@ const NoteCardContainer = styled("div", () => ({
   width: "100%",
 }));
 
-export default ({ isFocused = false, details = {}, onSelect, onClose }) => {
-  const { heading = "", theme = "blue", notes = [], id } = details;
-  const { setCategories } = useCategory();
-  const handleChange = (e) => {
-    e.persist();
-    setCategories((categories) =>
-      categories.map((category) => {
-        if (id === category.id) {
-          return {
-            ...category,
-            heading: e.target.value,
-          };
-        }
-        return category;
-      })
-    );
-  };
-
-  const handleDeleteCategory = () => {
-    if (confirm("Are you sure you want to delete the category?")) {
+export default React.memo(
+  ({ isFocused = false, details = {}, onSelect, onClose }) => {
+    const { heading = "", theme = "blue", notes = [], id } = details;
+    const { setCategories } = useCategory();
+    const handleChange = (e) => {
+      e.persist();
       setCategories((categories) =>
-        categories.filter((category) => category.id !== id)
-      );
-    }
-  };
-
-  const updateTheme = (color) =>
-    setCategories((categories) =>
-      categories.map((category) => {
-        if (category.id !== id) {
-          return category;
-        }
-        return {
-          ...category,
-          theme: color,
-        };
-      })
-    );
-  const handleUpdateNote = (noteId) => (details = {}) => {
-    if (!noteId) {
-      setCategories((categories) =>
-        categories.map((category = {}) => {
+        categories.map((category) => {
           if (id === category.id) {
             return {
               ...category,
-              notes: [...(category.notes || []), { ...details, id: uuidv4() }],
+              heading: e.target.value,
             };
           }
           return category;
         })
       );
-    } else {
+    };
+
+    const handleDeleteCategory = () => {
+      if (confirm("Are you sure you want to delete the category?")) {
+        setCategories((categories) =>
+          categories.filter((category) => category.id !== id)
+        );
+      }
+    };
+
+    const updateTheme = (color) =>
+      setCategories((categories) =>
+        categories.map((category) => {
+          if (category.id !== id) {
+            return category;
+          }
+          return {
+            ...category,
+            theme: color,
+          };
+        })
+      );
+    const handleUpdateNote = (noteId) => (details = {}) => {
+      if (!noteId) {
+        setCategories((categories) =>
+          categories.map((category = {}) => {
+            if (id === category.id) {
+              return {
+                ...category,
+                notes: [
+                  ...(category.notes || []),
+                  { ...details, id: uuidv4() },
+                ],
+              };
+            }
+            return category;
+          })
+        );
+      } else {
+        setCategories((categories) =>
+          categories.map((category = {}) => {
+            if (id === category.id) {
+              return {
+                ...category,
+                notes: notes.map((note) => {
+                  if (note.id === noteId) {
+                    return {
+                      ...note,
+                      ...details,
+                    };
+                  }
+                  return note;
+                }),
+              };
+            }
+            return category;
+          })
+        );
+      }
+    };
+
+    const handleDeleteNote = (noteId) => () => {
       setCategories((categories) =>
         categories.map((category = {}) => {
           if (id === category.id) {
             return {
               ...category,
-              notes: notes.map((note) => {
-                if (note.id === noteId) {
-                  return {
-                    ...note,
-                    ...details,
-                  };
-                }
-                return note;
-              }),
+              notes: notes.filter((note) => note.id !== noteId),
             };
           }
           return category;
         })
       );
-    }
-  };
+    };
 
-  const handleDeleteNote = (noteId) => () => {
-    setCategories((categories) =>
-      categories.map((category = {}) => {
-        if (id === category.id) {
-          return {
-            ...category,
-            notes: notes.filter((note) => note.id !== noteId),
-          };
-        }
-        return category;
-      })
-    );
-  };
+    const [focusedInput, setFocusedInput] = React.useState(null);
 
-  return (
-    <Category $isFocused={isFocused} onClick={onSelect} $theme={theme}>
-      {isFocused && (
-        <CloseButton
-          position="absolute"
-          top="0.3rem"
-          right="0.3rem"
-          onClick={onClose}
-        />
-      )}
-      <CategoryHeader $theme={theme}>
-        <Editable
-          isPreviewFocusable={isFocused}
-          value={heading}
-          selectAllOnFocus={false}
-        >
-          <EditableInput value={heading} onChange={handleChange} />
-          <EditablePreview />
-        </Editable>
-      </CategoryHeader>
-
-      <NoteCardContainer>
-        {notes.map((note) => (
-          <Note
-            key={note.id}
-            theme={theme}
-            details={note}
-            isCategoryFocused={isFocused}
-            onUpdate={handleUpdateNote(note.id)}
-            onDelete={handleDeleteNote(note.id)}
+    return (
+      <Category
+        $isFocused={isFocused}
+        onClick={() => {
+          if (!isFocused) {
+            setFocusedInput("");
+          }
+          onSelect();
+        }}
+        $theme={theme}
+      >
+        {isFocused && (
+          <CloseButton
+            position="absolute"
+            top="0.3rem"
+            right="0.3rem"
+            onClick={onClose}
           />
-        ))}
-      </NoteCardContainer>
-      <Note
-        theme={theme}
-        onUpdate={handleUpdateNote()}
-        isCategoryFocused={isFocused}
-        details={{}}
-        mode="ADD"
-      />
-
-      <Popover placement="top">
-        <PopoverTrigger>
-          <Button
-            title="Choose theme"
-            marginTop="1rem"
-            float="right"
-            size="sm"
-            aria-label="Choose The,e"
-            icon="color"
-            bg={cardThemes[theme].primaryColor}
+        )}
+        <CategoryHeader $theme={theme}>
+          <Editable
+            isPreviewFocusable={isFocused}
+            value={heading}
+            selectAllOnFocus={false}
           >
-            <IconTheme
-              style={{
-                color: cardThemes[theme].fontColor,
-              }}
+            <EditableInput value={heading} onChange={handleChange} />
+            <EditablePreview />
+          </Editable>
+        </CategoryHeader>
+
+        <NoteCardContainer>
+          {notes.map((note) => (
+            <Note
+              key={note.id}
+              theme={theme}
+              details={note}
+              isCategoryFocused={isFocused}
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+              onUpdate={handleUpdateNote(note.id)}
+              onDelete={handleDeleteNote(note.id)}
             />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent width="10rem">
-          <PopoverHeader color="black">Pick A theme</PopoverHeader>
-          <PopoverBody>
-            <ThemePicker onThemeSelect={updateTheme} />
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
-      <IconButton
-        onClick={handleDeleteCategory}
-        icon="delete"
-        marginTop="1rem"
-        float="right"
-        aria-label="Delete Category"
-        size="sm"
-        color="white"
-        marginRight="1rem"
-        bg={cardThemes[theme].primaryColor}
-      />
-    </Category>
-  );
-};
+          ))}
+        </NoteCardContainer>
+        <Note
+          theme={theme}
+          focusedInput={focusedInput}
+          setFocusedInput={setFocusedInput}
+          onUpdate={handleUpdateNote()}
+          isCategoryFocused={isFocused}
+          details={{}}
+          mode="ADD"
+        />
+
+        <Popover placement="top">
+          <PopoverTrigger>
+            <Button
+              title="Choose theme"
+              marginTop="1rem"
+              float="right"
+              size="sm"
+              aria-label="Choose The,e"
+              icon="color"
+              bg={cardThemes[theme].primaryColor}
+            >
+              <IconTheme
+                style={{
+                  color: cardThemes[theme].fontColor,
+                }}
+              />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent width="10rem">
+            <PopoverHeader color="black">Pick A theme</PopoverHeader>
+            <PopoverBody>
+              <ThemePicker onThemeSelect={updateTheme} />
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
+        <IconButton
+          onClick={handleDeleteCategory}
+          icon="delete"
+          marginTop="1rem"
+          float="right"
+          aria-label="Delete Category"
+          size="sm"
+          color="white"
+          marginRight="1rem"
+          bg={cardThemes[theme].primaryColor}
+        />
+      </Category>
+    );
+  }
+);
