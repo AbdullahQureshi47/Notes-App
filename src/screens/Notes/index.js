@@ -8,7 +8,7 @@ import theme from "../../theme";
 
 const NotesContainer = styled("div", () => ({
   width: "100vw",
-  minHeight: "100vh",
+  minHeight: "100%",
   backgroundImage: "url('./assets/notes-bg.jpg')",
   backgroundSize: "cover",
   backgroundPosition: "center",
@@ -78,7 +78,7 @@ export default () => {
 
   return (
     <NotesContainer>
-      <Overlay />
+      <Overlay onClick={() => setSelectedCategory("")} />
       <Heading>Start Keeping your notes</Heading>
       <CategoryContainer>
         {categories.map((category) => (

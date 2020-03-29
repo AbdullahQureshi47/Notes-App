@@ -91005,11 +91005,11 @@ var ButtonWithTooltip = function ButtonWithTooltip(_ref5) {
       label = _ref5$label === void 0 ? "" : _ref5$label,
       props = _objectWithoutProperties(_ref5, ["label"]);
 
-  return _react.default.createElement(_core.Tooltip, {
+  return /*#__PURE__*/_react.default.createElement(_core.Tooltip, {
     zIndex: 2,
     hasArrow: true,
     label: label
-  }, _react.default.createElement(_core.IconButton, _extends({
+  }, /*#__PURE__*/_react.default.createElement(_core.IconButton, _extends({
     borderColor: "black",
     size: "sm",
     variant: "outline",
@@ -91039,35 +91039,38 @@ var _default = _react.default.memo(function (_ref6) {
   };
 
   var updateStyle = function updateStyle(style) {
-    return handleAdd("styles", styles.includes(style) ? styles.filter(function (s) {
+    content && handleAdd("styles", styles.includes(style) ? styles.filter(function (s) {
       return s !== style;
     }) : [].concat(_toConsumableArray(styles), [style]));
   };
 
   var isInputFocused = focusedInput === id && isCategoryFocused;
-  return _react.default.createElement(NoteCard, null, _react.default.createElement(Note, null, _react.default.createElement("div", {
+
+  var submitOnEnter = function submitOnEnter(e) {
+    if (e.keyCode === 13 && e.shiftKey === false) {
+      e.preventDefault();
+      e.target.value && handleAdd("content", e.target.value);
+      setFocusedInput("");
+    }
+  };
+
+  return /*#__PURE__*/_react.default.createElement(NoteCard, null, /*#__PURE__*/_react.default.createElement(Note, null, /*#__PURE__*/_react.default.createElement("div", {
     style: {
       color: completed ? "#11FF33" : "#000"
     }
-  }, completed ? "✔" : "●", " \xA0\xA0"), isInputFocused ? _react.default.createElement(_Input.default, {
+  }, completed ? "✔" : "●", " \xA0\xA0"), isInputFocused ? /*#__PURE__*/_react.default.createElement(_Input.default, {
     autoFocus: true,
     rows: 6,
     defaultValue: content,
     $bold: styles.includes("b"),
     $italics: styles.includes("i"),
     $underlined: styles.includes("u"),
-    onKeyDown: function onKeyDown(e) {
-      if (e.keyCode === 13 && e.shiftKey === false) {
-        e.preventDefault();
-        e.target.value && handleAdd("content", e.target.value);
-        setFocusedInput("");
-      }
-    },
+    onKeyDown: submitOnEnter,
     placeholder: "Click to add a note",
     onBlur: function onBlur(e) {
       e.target.value && handleAdd("content", e.target.value);
     }
-  }) : _react.default.createElement(Preview, {
+  }) : /*#__PURE__*/_react.default.createElement(Preview, {
     onClick: function onClick() {
       if (isCategoryFocused) {
         setFocusedInput(id);
@@ -91076,9 +91079,9 @@ var _default = _react.default.memo(function (_ref6) {
     $bold: styles.includes("b"),
     $italics: styles.includes("i"),
     $underlined: styles.includes("u")
-  }, String(content).length ? String(content) : "Click here to add a note")), _react.default.createElement(Footer, {
-    $show: isInputFocused
-  }, _react.default.createElement(FooterContainer, null, _react.default.createElement(TimeContainer, null, "Time left -", " ", completionDate ? (0, _utils.getExactDifference)(completionDate) : ""), _react.default.createElement(Actions, null, _react.default.createElement(ButtonWithTooltip, {
+  }, String(content).length ? String(content) : "Click here to add a note")), /*#__PURE__*/_react.default.createElement(Footer, {
+    $show: isInputFocused && content
+  }, /*#__PURE__*/_react.default.createElement(FooterContainer, null, /*#__PURE__*/_react.default.createElement(TimeContainer, null, "Time left -", " ", completionDate ? (0, _utils.getExactDifference)(completionDate) : ""), /*#__PURE__*/_react.default.createElement(Actions, null, /*#__PURE__*/_react.default.createElement(ButtonWithTooltip, {
     label: "Delete",
     disabled: !id,
     icon: "delete",
@@ -91087,14 +91090,14 @@ var _default = _react.default.memo(function (_ref6) {
         onDelete();
       }
     }
-  }), _react.default.createElement(ButtonWithTooltip, {
+  }), /*#__PURE__*/_react.default.createElement(ButtonWithTooltip, {
     label: "Mark as ".concat(completed ? "not complete" : "completed"),
     marginLeft: "1rem",
     icon: completed ? "close" : "check",
     onClick: function onClick() {
-      return handleAdd("completed", !completed);
+      return content && handleAdd("completed", !completed);
     }
-  }), _react.default.createElement(_reactDatepicker.default, {
+  }), /*#__PURE__*/_react.default.createElement(_reactDatepicker.default, {
     minDate: Date.now(),
     selected: completionDate ? new Date(completionDate) : new Date(),
     timeInputLabel: "Time:",
@@ -91104,12 +91107,12 @@ var _default = _react.default.memo(function (_ref6) {
     },
     showPopperArrow: false,
     showTimeInput: true,
-    customInput: _react.default.createElement(ButtonWithTooltip, {
+    customInput: /*#__PURE__*/_react.default.createElement(ButtonWithTooltip, {
       label: "Update Completion Time",
       marginLeft: "1rem",
       icon: "calendar"
     })
-  }), _react.default.createElement(TextStyles, null, _react.default.createElement(TextStyleButton, {
+  }), /*#__PURE__*/_react.default.createElement(TextStyles, null, /*#__PURE__*/_react.default.createElement(TextStyleButton, {
     onClick: function onClick() {
       return updateStyle("b");
     },
@@ -91118,7 +91121,7 @@ var _default = _react.default.memo(function (_ref6) {
     },
     $selected: styles.includes("b"),
     theme: theme
-  }, "B"), _react.default.createElement(TextStyleButton, {
+  }, "B"), /*#__PURE__*/_react.default.createElement(TextStyleButton, {
     onClick: function onClick() {
       return updateStyle("i");
     },
@@ -91127,7 +91130,7 @@ var _default = _react.default.memo(function (_ref6) {
     },
     $selected: styles.includes("i"),
     theme: theme
-  }, "I"), _react.default.createElement(TextStyleButton, {
+  }, "I"), /*#__PURE__*/_react.default.createElement(TextStyleButton, {
     onClick: function onClick() {
       return updateStyle("u");
     },
@@ -91369,9 +91372,11 @@ var _default = _react.default.memo(function (_ref3) {
       focusedInput = _React$useState2[0],
       setFocusedInput = _React$useState2[1];
 
-  return _react.default.createElement(Category, {
+  return /*#__PURE__*/_react.default.createElement(Category, {
     $isFocused: isFocused,
-    onClick: function onClick() {
+    onClick: function onClick(e) {
+      e.stopPropagation();
+
       if (!isFocused) {
         setFocusedInput("");
       }
@@ -91379,22 +91384,22 @@ var _default = _react.default.memo(function (_ref3) {
       onSelect();
     },
     $theme: theme
-  }, isFocused && _react.default.createElement(_core.CloseButton, {
+  }, isFocused && /*#__PURE__*/_react.default.createElement(_core.CloseButton, {
     position: "absolute",
     top: "0.3rem",
     right: "0.3rem",
     onClick: onClose
-  }), _react.default.createElement(CategoryHeader, {
+  }), /*#__PURE__*/_react.default.createElement(CategoryHeader, {
     $theme: theme
-  }, _react.default.createElement(_core.Editable, {
+  }, /*#__PURE__*/_react.default.createElement(_core.Editable, {
     isPreviewFocusable: isFocused,
     value: heading,
     selectAllOnFocus: false
-  }, _react.default.createElement(_core.EditableInput, {
+  }, /*#__PURE__*/_react.default.createElement(_core.EditableInput, {
     value: heading,
     onChange: handleChange
-  }), _react.default.createElement(_core.EditablePreview, null))), _react.default.createElement(NoteCardContainer, null, notes.map(function (note) {
-    return _react.default.createElement(_Note.default, {
+  }), /*#__PURE__*/_react.default.createElement(_core.EditablePreview, null))), /*#__PURE__*/_react.default.createElement(NoteCardContainer, null, notes.map(function (note) {
+    return /*#__PURE__*/_react.default.createElement(_Note.default, {
       key: note.id,
       theme: theme,
       details: note,
@@ -91404,17 +91409,16 @@ var _default = _react.default.memo(function (_ref3) {
       onUpdate: handleUpdateNote(note.id),
       onDelete: handleDeleteNote(note.id)
     });
-  })), _react.default.createElement(_Note.default, {
+  })), /*#__PURE__*/_react.default.createElement(_Note.default, {
     theme: theme,
     focusedInput: focusedInput,
     setFocusedInput: setFocusedInput,
     onUpdate: handleUpdateNote(),
     isCategoryFocused: isFocused,
-    details: {},
-    mode: "ADD"
-  }), _react.default.createElement(_core.Popover, {
+    details: {}
+  }), /*#__PURE__*/_react.default.createElement(_core.Popover, {
     placement: "top"
-  }, _react.default.createElement(_core.PopoverTrigger, null, _react.default.createElement(_core.Button, {
+  }, /*#__PURE__*/_react.default.createElement(_core.PopoverTrigger, null, /*#__PURE__*/_react.default.createElement(_core.Button, {
     title: "Choose theme",
     marginTop: "1rem",
     float: "right",
@@ -91422,17 +91426,17 @@ var _default = _react.default.memo(function (_ref3) {
     "aria-label": "Choose The,e",
     icon: "color",
     bg: _theme.cardThemes[theme].primaryColor
-  }, _react.default.createElement(_color.default, {
+  }, /*#__PURE__*/_react.default.createElement(_color.default, {
     style: {
       color: _theme.cardThemes[theme].fontColor
     }
-  }))), _react.default.createElement(_core.PopoverContent, {
+  }))), /*#__PURE__*/_react.default.createElement(_core.PopoverContent, {
     width: "10rem"
-  }, _react.default.createElement(_core.PopoverHeader, {
+  }, /*#__PURE__*/_react.default.createElement(_core.PopoverHeader, {
     color: "black"
-  }, "Pick A theme"), _react.default.createElement(_core.PopoverBody, null, _react.default.createElement(_ThemePicker.default, {
+  }, "Pick A theme"), /*#__PURE__*/_react.default.createElement(_core.PopoverBody, null, /*#__PURE__*/_react.default.createElement(_ThemePicker.default, {
     onThemeSelect: updateTheme
-  })))), _react.default.createElement(_core.IconButton, {
+  })))), /*#__PURE__*/_react.default.createElement(_core.IconButton, {
     onClick: handleDeleteCategory,
     icon: "delete",
     marginTop: "1rem",
@@ -91493,7 +91497,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var NotesContainer = (0, _styletronReact.styled)("div", function () {
   return {
     width: "100vw",
-    minHeight: "100vh",
+    minHeight: "100%",
     backgroundImage: "url('./assets/notes-bg.jpg')",
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -91576,15 +91580,19 @@ var _default = function _default() {
     });
   };
 
-  return _react.default.createElement(NotesContainer, null, _react.default.createElement(Overlay, null), _react.default.createElement(Heading, null, "Start Keeping your notes"), _react.default.createElement(CategoryContainer, null, categories.map(function (category) {
-    return _react.default.createElement(_Category.default, {
+  return /*#__PURE__*/_react.default.createElement(NotesContainer, null, /*#__PURE__*/_react.default.createElement(Overlay, {
+    onClick: function onClick() {
+      return setSelectedCategory("");
+    }
+  }), /*#__PURE__*/_react.default.createElement(Heading, null, "Start Keeping your notes"), /*#__PURE__*/_react.default.createElement(CategoryContainer, null, categories.map(function (category) {
+    return /*#__PURE__*/_react.default.createElement(_Category.default, {
       key: category.id,
       isFocused: selectedCategory === category.id,
       onSelect: handleSelectCategory(category.id),
       onClose: closeSelectedCategory,
       details: category
     });
-  }), _react.default.createElement(CategoryAddButton, {
+  }), /*#__PURE__*/_react.default.createElement(CategoryAddButton, {
     fontSize: "2rem",
     onClick: addCategory
   }, "+ Add Category")));
@@ -91681,7 +91689,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58955" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49260" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

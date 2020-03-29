@@ -158,7 +158,8 @@ export default React.memo(
     return (
       <Category
         $isFocused={isFocused}
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (!isFocused) {
             setFocusedInput("");
           }
@@ -206,7 +207,6 @@ export default React.memo(
           onUpdate={handleUpdateNote()}
           isCategoryFocused={isFocused}
           details={{}}
-          mode="ADD"
         />
 
         <Popover placement="top">

@@ -104,15 +104,25 @@ export default React.memo(
       });
     };
 
-    const updateStyle = (style) =>
-      handleAdd(
-        "styles",
-        styles.includes(style)
-          ? styles.filter((s) => s !== style)
-          : [...styles, style]
-      );
+    const updateStyle = (style) => {
+      content &&
+        handleAdd(
+          "styles",
+          styles.includes(style)
+            ? styles.filter((s) => s !== style)
+            : [...styles, style]
+        );
+    };
 
     const isInputFocused = focusedInput === id && isCategoryFocused;
+
+    const submitOnEnter = (e) => {
+      if (e.keyCode === 13 && e.shiftKey === false) {
+        e.preventDefault();
+        e.target.value && handleAdd("content", e.target.value);
+        setFocusedInput("");
+      }
+    };
 
     return (
       <NoteCard>
@@ -132,13 +142,7 @@ export default React.memo(
               $bold={styles.includes("b")}
               $italics={styles.includes("i")}
               $underlined={styles.includes("u")}
-              onKeyDown={(e) => {
-                if (e.keyCode === 13 && e.shiftKey === false) {
-                  e.preventDefault();
-                  e.target.value && handleAdd("content", e.target.value);
-                  setFocusedInput("");
-                }
-              }}
+              onKeyDown={submitOnEnter}
               placeholder="Click to add a note"
               onBlur={(e) => {
                 e.target.value && handleAdd("content", e.target.value);
@@ -162,7 +166,7 @@ export default React.memo(
           )}
         </Note>
 
-        <Footer $show={isInputFocused}>
+        <Footer $show={isInputFocused && content}>
           <FooterContainer>
             <TimeContainer>
               Time left -{" "}
@@ -184,7 +188,7 @@ export default React.memo(
                 label={`Mark as ${completed ? "not complete" : "completed"}`}
                 marginLeft="1rem"
                 icon={completed ? "close" : "check"}
-                onClick={() => handleAdd("completed", !completed)}
+                onClick={() => content && handleAdd("completed", !completed)}
               />
 
               <Datepicker
